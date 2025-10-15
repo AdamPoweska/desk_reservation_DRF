@@ -10,4 +10,5 @@ router.register(f'users', views.UserViewSet, basename='user')
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls')), # 'http://127.0.0.1:8000/api-auth/login/' or 'http://127.0.0.1:8000/api-auth/logout/'
 ]
