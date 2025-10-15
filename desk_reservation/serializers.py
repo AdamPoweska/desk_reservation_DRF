@@ -13,3 +13,11 @@ class DeskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Desk
         fields = ['floor', 'desk_number', 'reservation']
+
+
+class UserSerializer(serializers.ModelSerializer):
+    # desk_reservation = serializers.PrimaryKeyRelatedField(many=True, queryset=Desk.objects.all())
+
+    class Meta:
+        model = User
+        fields = ['id', 'username']

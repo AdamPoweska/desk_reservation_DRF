@@ -1,12 +1,13 @@
 # from django.shortcuts import render
+from django.contrib.auth.models import User
 from rest_framework import permissions, viewsets
 from desk_reservation.models import Floor, Desk
-from desk_reservation.serializers import FloorSerializer, DeskSerializer
+from desk_reservation.serializers import FloorSerializer, DeskSerializer, UserSerializer
 
 
 class FloorViewSet(viewsets.ModelViewSet):
     """
-    `list`, `create`, `retrieve`, `update` and `destroy` actions.
+    CRUD actions.
     """
     queryset = Floor.objects.all()
     serializer_class = FloorSerializer
@@ -15,8 +16,16 @@ class FloorViewSet(viewsets.ModelViewSet):
 
 class DeskViewSet(viewsets.ModelViewSet):
     """
-    `list`, `create`, `retrieve`, `update` and `destroy` actions.
+    CRUD actions.
     """
     queryset = Desk.objects.all()
     serializer_class = DeskSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    Read only: 'list' and 'retrieve' actions.
+    """
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
