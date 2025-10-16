@@ -17,8 +17,8 @@ class Desk(models.Model):
         
 
 class Worker(models.Model):
-    name = models.IntegerField(max_length=30)
-    surname = models.IntegerField(max_length=30)
+    name = models.CharField(max_length=30)
+    surname = models.CharField(max_length=30)
     id_number = models.IntegerField(validators=[MinValueValidator(1)])
 
     class Meta:
