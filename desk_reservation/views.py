@@ -1,7 +1,7 @@
 # from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework import permissions, viewsets
-from desk_reservation.models import Floor, Desk, Worker
+from desk_reservation.models import Floor, Desk
 from desk_reservation.serializers import FloorSerializer, DeskSerializer, WorkerSerializer
 
 
@@ -27,5 +27,6 @@ class WorkerViewSet(viewsets.ModelViewSet):
     """
     CRUD actions.
     """
-    queryset = Worker.objects.all()
+    queryset = User.objects.all()
     serializer_class = WorkerSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]

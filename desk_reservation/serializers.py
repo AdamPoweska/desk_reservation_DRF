@@ -1,26 +1,26 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractUser
 from rest_framework import serializers
-from desk_reservation.models import Floor, Desk, Worker
+from desk_reservation.models import Floor, Desk
 
 
 class FloorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Floor
-        fields = ['floor_number']
+        fields = ['id', 'floor_number']
 
 
 class DeskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Desk
-        fields = ['floor', 'desk_number', 'reservation']
+        fields = ['id', 'floor', 'desk_number', 'reservation']
 
 
 class WorkerSerializer(serializers.ModelSerializer):
     # desk_reservation = serializers.PrimaryKeyRelatedField(many=True, queryset=Desk.objects.all())
 
     class Meta:
-        model = Worker
-        fields = ['name', 'surname', 'id_number']
+        model = User
+        fields = ['id', 'first_name', 'last_name', 'email']
 
 
 '''

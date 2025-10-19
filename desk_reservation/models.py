@@ -15,7 +15,7 @@ class Desk(models.Model):
         def __repr__(self):
             return f"{self.floor}-{self.desk_number}"
         
-
+'''
 class Worker(models.Model):
     name = models.CharField(max_length=30)
     surname = models.CharField(max_length=30)
@@ -23,3 +23,4 @@ class Worker(models.Model):
 
     def __repr__(self):
         return f"{self.name}{self.surname}-{self.id_number}"
+'''
