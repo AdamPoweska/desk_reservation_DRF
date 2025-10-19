@@ -8,7 +8,7 @@ class Floor(models.Model):
 
 class Desk(models.Model):
     floor = models.ForeignKey(Floor, on_delete=models.CASCADE)
-    desk_number = models.IntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(100)])
+    desk_number = models.IntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(100)], unique=True)
     reservation = models.BooleanField()
 
     class Meta:
@@ -19,8 +19,7 @@ class Desk(models.Model):
 class Worker(models.Model):
     name = models.CharField(max_length=30)
     surname = models.CharField(max_length=30)
-    id_number = models.IntegerField(validators=[MinValueValidator(1)])
+    id_number = models.IntegerField(validators=[MinValueValidator(1)], unique=True)
 
-    class Meta:
-        def __repr__(self):
-            return f"{self.name}{self.surname}-{self.id_number}"
+    def __repr__(self):
+        return f"{self.name}{self.surname}-{self.id_number}"
