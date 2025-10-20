@@ -1,19 +1,21 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
+# def desk_check(Floor, Desk):
+#     if Desk.floor and Desk.desk_number
+
 
 class Floor(models.Model):
-    floor_number = models.IntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(10)])
+    floor_number = models.IntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(10)], unique=True)
 
 
 class Desk(models.Model):
     floor = models.ForeignKey(Floor, on_delete=models.CASCADE)
-    desk_number = models.IntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(100)], unique=True)
+    desk_number = models.IntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(100)], blank=False, null=False)
     reservation = models.BooleanField()
 
-    class Meta:
-        def __repr__(self):
-            return f"{self.floor}-{self.desk_number}"
+    def __repr__(self):
+        return f"{self.floor}-{self.desk_number}"
         
 '''
 class Worker(models.Model):

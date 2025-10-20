@@ -13,6 +13,11 @@ class DeskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Desk
         fields = ['id', 'floor', 'desk_number', 'reservation']
+    
+    def validate_desk_number(self, value):
+        if not value:
+            raise serializers.ValidationError("Desk can not be empty")
+        return value
 
 
 class WorkerSerializer(serializers.ModelSerializer):
