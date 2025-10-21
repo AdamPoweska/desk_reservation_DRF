@@ -49,40 +49,24 @@ class DeskViewSet(viewsets.ModelViewSet):
         if created == False:
             return Response({'message': 'Desk number already exists on given floor'}, status=status.HTTP_400_BAD_REQUEST)
         
-        # if not created:
-        #     return Response(
-        #         DeskSerializer(desk).data,
-        #         status=status.HTTP_200_OK     
-        #     )
+
+        """
+        Zgodność z REST — po POST powinieneś zwrócić 201 Created i w nagłówku 
+        Location podać adres nowo utworzonego zasobu.
+
+        Klient API (np. frontend, Postman, inny mikroserwis) może dzięki temu od razu przejść do tego zasobu, 
+        bez szukania jego id.
         
+        Nagłówek wyświetli się tylko jeżeli mamy HyperlinkedModelSerializer albo dodamy nagłówek 'url' ręcznie.
+        """
         headhers = self.get_success_headers(serializer.data)
         return Response(
             DeskSerializer(desk).data,
             status=status.HTTP_201_CREATED,
             headers=headhers
         )
-
-        # if created:
-        #     return Response(DeskSerializer(desk).data, status=status.HTTP_201_CREATED)
-        # else:
-        #     return Response(DeskSerializer(desk).data, status=status.HTTP_200_OK)
-
-
-
-        #     if desk_number != '':
-        #         desk_list = Desk.objects.filter(floor=floor, desk_number=desk_number)
-
-        #         if not desk_list:
-        #             serializer.save()
-        #         else:
-        #             serializer = DeskSerializer(desk_list[0])
-        #         return Response(serializer.data)
-        #     else:
-        #         return Response(data={'message': 'Empty desk_number'}, status=status.HTTP_400_BAD_REQUEST)
-        # else:
-        #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
+        
+        
 class WorkerViewSet(viewsets.ModelViewSet):
     """
     CRUD actions.

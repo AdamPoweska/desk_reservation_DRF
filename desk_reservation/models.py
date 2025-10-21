@@ -1,9 +1,6 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
-# def desk_check(Floor, Desk):
-#     if Desk.floor and Desk.desk_number
-
 
 class Floor(models.Model):
     floor_number = models.IntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(10)], unique=True)
