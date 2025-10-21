@@ -34,17 +34,26 @@ class DeskViewSet(viewsets.ModelViewSet):
         if desk_number is None or str(desk_number).strip() == "":
             return Response({'message': 'Desk can not be empty'}, status=status.HTTP_400_BAD_REQUEST)
 
+        """
+        get_or_create - Returns a tuple of (object, created), where object is the retrieved or created object 
+        and created is a boolean specifying whether a new object was created.
+        If an object is found, get_or_create() returns a tuple of that object and False. created = False, defaults= is ignored
+        If an object is not found, get_or_create() creates a new object. defaults= <- additional fields for creating object
+        """
         desk, created = Desk.objects.get_or_create(
             floor=floor,
             desk_number=desk_number,
             defaults=serializer.validated_data
         )
 
-        if not created:
-            return Response(
-                DeskSerializer(desk).data,
-                status=status.HTTP_200_OK     
-            )
+        if created == False:
+            return Response({'message': 'Desk number already exists on given floor'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # if not created:
+        #     return Response(
+        #         DeskSerializer(desk).data,
+        #         status=status.HTTP_200_OK     
+        #     )
         
         headhers = self.get_success_headers(serializer.data)
         return Response(
