@@ -22,21 +22,17 @@ class DeskSerializer(serializers.ModelSerializer):
 
 class WorkerSerializer(serializers.ModelSerializer):
     # desk_reservation = serializers.PrimaryKeyRelatedField(many=True, queryset=Desk.objects.all())
-    password_check = serializers.BooleanField(label="Generate password automatically?", required=False, default=True) # write_only=True sprawi że hasło będzie można tylko zapisać ale już nie odczytać
-    password = serializers.CharField(required=False, min_length=8, max_length=20, write_only=False) # write_only=True - chroni hasło, żeby nie wysyłać go w odpowiedzi API
+    # password_check = serializers.BooleanField(label="Generate password automatically?", required=False, default=True) # write_only=True sprawi że hasło będzie można tylko zapisać ale już nie odczytać
+    password = serializers.CharField(required=False, help_text='password will be generated automatically', write_only=False) # write_only=True - chroni hasło, żeby nie wysyłać go w odpowiedzi API
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'password_check', 'password']
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'password']
     
     def create(self, validated_data):
-        password_check = validated_data.pop('password_check', True)
-
-        if password_check:
-            password = User.objects.make_random_password()
-            user = User.objects.create_user(password=password, **validated_data)
-        else:
-            user = User.objects.create_user(**validated_data)
+        password = validated_data.pop('password', None)
+        password = User.objects.make_random_password()
+        user = User.objects.create_user(password=password, **validated_data)
         
         return user
 
