@@ -9,7 +9,7 @@ class Floor(models.Model):
 class Desk(models.Model):
     floor = models.ForeignKey(Floor, on_delete=models.CASCADE)
     desk_number = models.IntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(100)], blank=False, null=False)
-    reservation = models.BooleanField()
+    # reservation = models.BooleanField()
 
     def __repr__(self):
         return f"{self.floor}-{self.desk_number}"

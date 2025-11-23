@@ -12,7 +12,7 @@ class FloorSerializer(serializers.ModelSerializer):
 class DeskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Desk
-        fields = ['id', 'floor', 'desk_number', 'reservation']
+        fields = ['id', 'floor', 'desk_number']
     
     def validate_desk_number(self, value):
         if not value:

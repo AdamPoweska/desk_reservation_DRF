@@ -23,7 +23,6 @@ class FloorViewSet(viewsets.ModelViewSet):
     queryset = Floor.objects.all()
     serializer_class = FloorSerializer
     permission_classes = [IsReadOnly]
-    # permission_classes = [permissions.IsAdminUser]
 
 
 class DeskViewSet(viewsets.ModelViewSet):
@@ -84,4 +83,4 @@ class WorkerViewSet(viewsets.ModelViewSet):
     """
     queryset = User.objects.all()
     serializer_class = WorkerSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAdminUser]
