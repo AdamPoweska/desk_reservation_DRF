@@ -5,6 +5,12 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 class Floor(models.Model):
     floor_number = models.IntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(10)], unique=True)
 
+    def __str__(self):
+        return f"{self.floor_number}"
+
+    def __repr__(self):
+        return f"{self.floor_number}"
+
 
 class Desk(models.Model):
     floor = models.ForeignKey(Floor, on_delete=models.CASCADE)

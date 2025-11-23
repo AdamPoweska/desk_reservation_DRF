@@ -32,7 +32,7 @@ class DeskViewSet(viewsets.ModelViewSet):
     # https://stackoverflow.com/questions/49134679/drf-check-if-an-object-already-exist-in-db-when-receiving-a-request
     queryset = Desk.objects.all()
     serializer_class = DeskSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsReadOnly]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
