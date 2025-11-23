@@ -6,13 +6,22 @@ from desk_reservation.models import Floor, Desk
 from desk_reservation.serializers import FloorSerializer, DeskSerializer, WorkerSerializer
 
 
+class IsReadOnly(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        elif request.user and request.user.is_superuser:
+            return True
+
+
 class FloorViewSet(viewsets.ModelViewSet):
     """
     CRUD actions.
     """
     queryset = Floor.objects.all()
     serializer_class = FloorSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsReadOnly]
+    # permission_classes = [permissions.IsAdminUser]
 
 
 class DeskViewSet(viewsets.ModelViewSet):
