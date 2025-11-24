@@ -5,8 +5,8 @@ from desk_reservation import views
 router = DefaultRouter()
 router.register(f'desk', views.DeskViewSet, basename='desk')
 router.register(f'floor', views.FloorViewSet, basename='floor')
-# router.register(f'users', views.UserViewSet, basename='user')
 router.register(f'workers', views.WorkerViewSet, basename='workers')
+router.register(f'reservations', views.ReservationViewSet, basename='reservations')
 
 urlpatterns = [
     path('', include(router.urls)),

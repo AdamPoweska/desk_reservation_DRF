@@ -2,14 +2,12 @@
 from django.contrib.auth.models import User
 from rest_framework import permissions, viewsets, status
 from rest_framework.response import Response
-from desk_reservation.models import Floor, Desk
-from desk_reservation.serializers import FloorSerializer, DeskSerializer, WorkerSerializer
+from desk_reservation.models import Floor, Desk, Reservation
+from desk_reservation.serializers import FloorSerializer, DeskSerializer, WorkerSerializer, ReservationSerializer
 
 
 class IsReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
-        # if not request.user.is_authenticated:
-            # return False
         if request.user.is_authenticated and request.method in permissions.SAFE_METHODS: # GET, HEAD, OPTIONS
             return True
         elif request.user and request.user.is_superuser:
@@ -84,3 +82,12 @@ class WorkerViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = WorkerSerializer
     permission_classes = [permissions.IsAdminUser]
+
+
+class ReservationViewSet(viewsets.ModelViewSet):
+    """
+    Making reservations - CRUD.
+    """
+    queryset = Reservation.objects.all()
+    serializer_class = ReservationSerializer
+    permission_classes = [IsReadOnly]

@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User, AbstractUser
 from rest_framework import serializers
-from desk_reservation.models import Floor, Desk
+from desk_reservation.models import Floor, Desk, Reservation
 
 
 class FloorSerializer(serializers.ModelSerializer):
@@ -43,26 +43,8 @@ class WorkerSerializer(serializers.ModelSerializer):
             data['generated_password'] = instance._generated_password # to dodajemy klucz "generated_password" do słownika DATA i nadajemy mu wartość która była przekazana do funkcji jako INSTANCE
         return data
 
-"""
-def create(self, validated_data):
-    return User.objects.create_user(**validated_data)
-"""
 
-"""
-def create(self, validated_data):
-    password = validated_data.pop('password', None)
-    if not password:
-        password = User.objects.make_random_password()
-    user = User.objects.create_user(password=password, **validated_data)
-    return user
-"""
-
-
-'''
-class UserSerializer(serializers.ModelSerializer):
-    # desk_reservation = serializers.PrimaryKeyRelatedField(many=True, queryset=Desk.objects.all())
-
+class ReservationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ['id', 'username']
-'''
+        model = Reservation
+        fields = ['desk', 'reservation_date']
