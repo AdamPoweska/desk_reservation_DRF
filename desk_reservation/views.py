@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from rest_framework import permissions, viewsets, status
 from rest_framework.response import Response
 from desk_reservation.models import Floor, Desk, Reservation
-from desk_reservation.serializers import FloorSerializer, DeskSerializer, WorkerSerializer, ReservationSerializer
+from desk_reservation.serializers import *
 
 
 class IsReadOnly(permissions.BasePermission):
@@ -73,7 +73,17 @@ class DeskViewSet(viewsets.ModelViewSet):
             status=status.HTTP_201_CREATED,
             headers=headhers
         )
-        
+
+
+class FloorDeskNestedViewSet(viewsets.ModelViewSet):
+    # queryset = Floor.objects.all()
+    queryset = Floor.objects.prefetch_related('desk_set')
+    serializer_class = FloorDeskNestedSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    # def get_queryset(self):
+    #     return Floor.objects.filter(floor_num=self.kwargs['desk'])
+
         
 class WorkerViewSet(viewsets.ModelViewSet):
     """

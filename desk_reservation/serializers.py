@@ -12,12 +12,24 @@ class FloorSerializer(serializers.ModelSerializer):
 class DeskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Desk
-        fields = ['id', 'floor', 'desk_number']
+        fields = ['id', 'desk_number']
     
     def validate_desk_number(self, value):
         if not value:
             raise serializers.ValidationError("Desk can not be empty")
         return value
+
+class FloorDeskNestedSerializer(serializers.ModelSerializer):
+    desk_set = DeskSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Floor
+        fields = ['id', 'floor_number', 'desk_set']
+    
+    # def validate_desk_number(self, value):
+    #     if not value:
+    #         raise serializers.ValidationError("Desk can not be empty")
+    #     return value
 
 
 class WorkerSerializer(serializers.ModelSerializer):

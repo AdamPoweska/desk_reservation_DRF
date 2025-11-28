@@ -24,5 +24,6 @@ class Desk(models.Model):
 
 
 class Reservation(models.Model):
+    # floor = models.ForeignKey(Floor, on_delete=models.CASCADE)
     desk = models.ForeignKey(Desk, on_delete=models.CASCADE)
     reservation_date = models.DateField()
