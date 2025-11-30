@@ -1,6 +1,6 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
-from rest_framework_nested.routers import NestedDefaultRouter
+# from rest_framework_nested.routers import NestedDefaultRouter
 from desk_reservation import views
 
 router = DefaultRouter()
@@ -16,6 +16,6 @@ router.register(f'reservations', views.ReservationViewSet, basename='reservation
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('', include(desk_nested_router.urls)),
+    # path('', include(desk_nested_router.urls)),
     path('api-auth/', include('rest_framework.urls')), # 'http://127.0.0.1:8000/api-auth/login/' or 'http://127.0.0.1:8000/api-auth/logout/'
 ]
