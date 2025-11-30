@@ -77,7 +77,7 @@ class DeskViewSet(viewsets.ModelViewSet):
 
 class FloorDeskNestedViewSet(viewsets.ModelViewSet):
     # queryset = Floor.objects.all()
-    queryset = Floor.objects.prefetch_related('desk_set')
+    queryset = Floor.objects.prefetch_related('desk_set') # lepsza optymalizacja niż linia wyżej ale linia wyżej też bedzie w 100% działać
     serializer_class = FloorDeskNestedSerializer
     permission_classes = [permissions.IsAuthenticated]
 
