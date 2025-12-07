@@ -3,7 +3,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User
 
 class Floor(models.Model):
-    floor_number = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)], unique=True)
+    floor_number = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)]) # unique=True
 
     def __str__(self):
         return f"{self.floor_number}"
@@ -17,7 +17,7 @@ class Desk(models.Model):
     desk_number = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(100)], blank=False, null=False)
 
     def __str__(self):
-        return f"Floor: {self.floor} Desk: {self.desk_number}"
+        return f"Floor: {self.floor} > Desk: {self.desk_number}"
 
     def __repr__(self):
         return f"{self.floor}-{self.desk_number}"

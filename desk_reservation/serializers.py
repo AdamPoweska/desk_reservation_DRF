@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User, AbstractUser
 from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
 from desk_reservation.models import Floor, Desk, Reservation
 
 
@@ -7,24 +8,56 @@ class FloorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Floor
         fields = ['id', 'floor_number']
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Floor.objects.all(),
+                fields=['floor_number']
+            )
+        ]
 
 
 class DeskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Desk
-        fields = ['id', 'desk_number']
+        fields = ['floor', 'desk_number', 'id']
     
-    def validate_desk_number(self, value):
-        if not value:
-            raise serializers.ValidationError("Desk can not be empty")
-        return value
+    # def validate_desk_number(self, value):
+    #     if not value:
+    #         raise serializers.ValidationError("Desk can not be empty")
+    #     return value
 
 class FloorDeskNestedSerializer(serializers.ModelSerializer):
-    desk_set = DeskSerializer(many=True, read_only=True)
+    """desk_set = serializers.PrimaryKeyRelatedField(
+        # queryset=Desk.objects.only('desk_number'),
+        queryset=Desk.objects.all(),
+        many=True,
+    )"""
 
+    """desk_set = DeskSerializer(read_only=True)"""
+    # print('desk_set=', desk_set)
+
+    # desk_set_2 = serializers.ModelSerializer(
+    #     queryset=Desk.objects.all()
+    # )
+    # print("desk content = ", desk_set_2)
+    """
+    desk_on_related_floor = serializers.PrimaryKeyRelatedField(
+        # queryset=Desk.objects.only('desk_number'), #desk_related_floor
+        queryset=Desk.objects.all(),
+        source = 'desk_set',
+        write_only = True,
+    )
+    """
+    # print(desk_on_related_floor)
     class Meta:
         model = Floor
-        fields = ['id', 'floor_number', 'desk_set']
+        fields = ['floor_number', 'desk_set'] #desk_on_related_floor
+        # validators = [
+        #     UniqueTogetherValidator(
+        #         queryset=Desk.objects.all(),
+        #         fields=['floor_number', 'desk_number']
+        #     )
+        # ]
     
     # def validate_desk_number(self, value):
     #     if not value:
