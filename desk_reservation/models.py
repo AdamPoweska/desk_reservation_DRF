@@ -13,7 +13,7 @@ class Floor(models.Model):
 
 
 class Desk(models.Model):
-    floor = models.ForeignKey(Floor, on_delete=models.CASCADE)
+    floor = models.ForeignKey(Floor, related_name='desks_on_floor', on_delete=models.CASCADE)
     desk_number = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(100)], blank=False, null=False)
 
     def __str__(self):
