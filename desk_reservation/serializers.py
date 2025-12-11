@@ -26,34 +26,19 @@ class DeskSerializer(serializers.ModelSerializer):
     #         raise serializers.ValidationError("Desk can not be empty")
     #     return value
 
+
+class SmallDeskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Desk
+        fields = ['desk_number']
+
+
 class FloorDeskNestedSerializer(serializers.ModelSerializer):
-    '''desk_set = serializers.PrimaryKeyRelatedField(
-        # queryset=Desk.objects.only('desk_number'),
-        queryset=Desk.objects.all(),
-        many=True,
-    )'''
+    desks_on_floor = SmallDeskSerializer(many=True, read_only=True)
 
-    '''desk_nested = DeskSerializer(read_only=True)'''
-    # print('desk_set=', desk_set)
-
-    # desk_set_2 = serializers.ModelSerializer(
-    #     queryset=Desk.objects.all()
-    # )
-    # print("desk content = ", desk_set_2)
-    """
-    desk_on_related_floor = serializers.PrimaryKeyRelatedField(
-        # queryset=Desk.objects.only('desk_number'), #desk_related_floor
-        queryset=Desk.objects.all(),
-        source = 'desk_set',
-        write_only = True,
-    )
-    """
-
-    desks_on_floor = DeskSerializer(many=True, read_only=True)
-    # print(desk_on_related_floor)
     class Meta:
         model = Floor
-        fields = ['id', 'floor_number', 'desks_on_floor'] #desk_on_related_floor
+        fields = ['id', 'floor_number', 'desks_on_floor'] # wpisując 'desk_set' odwołamy się do ukrytego pola w modelu Floor - ale zwróci on tylko pk a nie wartości obiektów
         # validators = [
         #     UniqueTogetherValidator(
         #         queryset=Desk.objects.all(),
@@ -65,6 +50,9 @@ class FloorDeskNestedSerializer(serializers.ModelSerializer):
     #     if not value:
     #         raise serializers.ValidationError("Desk can not be empty")
     #     return value
+
+
+
 
 
 class WorkerSerializer(serializers.ModelSerializer):
