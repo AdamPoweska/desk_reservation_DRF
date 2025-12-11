@@ -33,7 +33,7 @@ class FloorDeskNestedSerializer(serializers.ModelSerializer):
         many=True,
     )"""
 
-    """desk_set = DeskSerializer(read_only=True)"""
+    '''desk_nested = DeskSerializer(read_only=True)'''
     # print('desk_set=', desk_set)
 
     # desk_set_2 = serializers.ModelSerializer(
@@ -51,7 +51,7 @@ class FloorDeskNestedSerializer(serializers.ModelSerializer):
     # print(desk_on_related_floor)
     class Meta:
         model = Floor
-        fields = ['floor_number', 'desk_set'] #desk_on_related_floor
+        fields = ['id', 'floor_number', 'desk_set'] #desk_on_related_floor
         # validators = [
         #     UniqueTogetherValidator(
         #         queryset=Desk.objects.all(),
