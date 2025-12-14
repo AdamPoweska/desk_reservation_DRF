@@ -81,11 +81,14 @@ class DeskViewSet(viewsets.ModelViewSet):
         )
 
 
-class FloorDeskNestedViewSet(viewsets.ModelViewSet):
+class FloorDeskNestedViewSetOne(viewsets.ModelViewSet):
+    """
+    This View set uses smaller serializer with only needed fields from Desk model: 'id', 'desk_number'. Fields can be easily changed in SmallDeskSerializer.
+    """
     queryset = Floor.objects.all()
     # queryset = Desk.objects.all()
     # queryset = Floor.objects.prefetch_related('desk_set') # lepsza optymalizacja niż linia wyżej ale linia wyżej też bedzie w 100% działać
-    serializer_class = FloorDeskNestedSerializer
+    serializer_class = FloorDeskNestedSerializerOne
     permission_classes = [permissions.IsAuthenticated]
 
     # def get_queryset(self):

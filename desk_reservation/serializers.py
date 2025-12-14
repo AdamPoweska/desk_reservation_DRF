@@ -30,10 +30,10 @@ class DeskSerializer(serializers.ModelSerializer):
 class SmallDeskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Desk
-        fields = ['desk_number']
+        fields = ['id', 'desk_number']
 
 
-class FloorDeskNestedSerializer(serializers.ModelSerializer):
+class FloorDeskNestedSerializerOne(serializers.ModelSerializer):
     desks_on_floor = SmallDeskSerializer(many=True, read_only=True)
 
     class Meta:
