@@ -67,6 +67,22 @@ class FloorDeskNestedSerializerThree(serializers.ModelSerializer):
         fields = ['id', 'floor_number', 'desks']
 
 
+class FloorDeskNestedSerializerFour(serializers.ModelSerializer):
+    desks = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Floor
+        fields = ['id', 'floor_number', 'desks']
+
+    def get_desks(self, obj):
+        # Filter only desks numbers: https://www.geeksforgeeks.org/python/how-to-filter-a-nested-serializer-in-django-rest-framework/?utm_source=chatgpt.com
+        return [
+            {
+                'desks': c.desk_number
+            }
+            for c in obj.desks_on_floor.all()
+        ]
+
 class WorkerSerializer(serializers.ModelSerializer):
     # desk_reservation = serializers.PrimaryKeyRelatedField(many=True, queryset=Desk.objects.all())
     # password_check = serializers.BooleanField(label="Generate password automatically?", required=False, default=True) # write_only=True sprawi że hasło będzie można tylko zapisać ale już nie odczytać

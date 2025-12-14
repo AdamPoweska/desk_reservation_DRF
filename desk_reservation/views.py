@@ -114,7 +114,18 @@ class FloorDeskNestedViewSetThree(viewsets.ModelViewSet):
     # queryset = Floor.objects.prefetch_related('desk_set') # lepsza optymalizacja niż linia wyżej ale linia wyżej też bedzie w 100% działać
     serializer_class = FloorDeskNestedSerializerThree
     permission_classes = [permissions.IsAuthenticated]
-    
+
+
+class FloorDeskNestedViewSetFour(viewsets.ModelViewSet):
+    """
+    This usuall nested serializer on reversed relation using full model data from related model.
+    """
+    queryset = Floor.objects.all()
+    # queryset = Desk.objects.all()
+    # queryset = Floor.objects.prefetch_related('desk_set') # lepsza optymalizacja niż linia wyżej ale linia wyżej też bedzie w 100% działać
+    serializer_class = FloorDeskNestedSerializerFour
+    permission_classes = [permissions.IsAuthenticated]
+
         
 class WorkerViewSet(viewsets.ModelViewSet):
     """
