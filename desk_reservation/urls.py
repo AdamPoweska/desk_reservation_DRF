@@ -7,6 +7,7 @@ router = DefaultRouter()
 router.register(f'desk', views.DeskViewSet, basename='desk')
 router.register(f'floor', views.FloorViewSet, basename='floor')
 router.register(f'floor_desk_one', views.FloorDeskNestedViewSetOne, basename='floor_desk_one')
+router.register(f'floor_desk_two', views.FloorDeskNestedViewSetTwo, basename='floor_desk_two')
 router.register(f'workers', views.WorkerViewSet, basename='workers')
 router.register(f'reservations', views.ReservationViewSet, basename='reservations')
 
