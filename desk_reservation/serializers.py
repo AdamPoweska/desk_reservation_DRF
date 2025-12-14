@@ -59,6 +59,13 @@ class FloorDeskNestedSerializerTwo(serializers.ModelSerializer):
         fields = ['id', 'floor_number', 'desks_on_floor']
 
 
+class FloorDeskNestedSerializerThree(serializers.ModelSerializer):
+    desks = serializers.PrimaryKeyRelatedField(queryset=Floor.objects.all(), source='desks_on_floor', many=True)
+
+    class Meta:
+        model = Floor
+        fields = ['id', 'floor_number', 'desks']
+
 
 class WorkerSerializer(serializers.ModelSerializer):
     # desk_reservation = serializers.PrimaryKeyRelatedField(many=True, queryset=Desk.objects.all())
