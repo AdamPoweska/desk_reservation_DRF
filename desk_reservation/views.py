@@ -96,7 +96,7 @@ class FloorDeskNestedViewSetOne(viewsets.ModelViewSet):
 
 class FloorDeskNestedViewSetTwo(viewsets.ModelViewSet):
     """
-    This usuall nested serializer on reversed relation using full model data from related model.
+    This is usual nested serializer on reversed relation using full model data from related model.
     """
     queryset = Floor.objects.all()
     # queryset = Desk.objects.all()
@@ -107,7 +107,7 @@ class FloorDeskNestedViewSetTwo(viewsets.ModelViewSet):
 
 class FloorDeskNestedViewSetThree(viewsets.ModelViewSet):
     """
-    This usuall nested serializer on reversed relation using full model data from related model.
+    This nested serializer uses 'PrimaryKeyRelatedField' on reversed relation. Only PK are shown.
     """
     queryset = Floor.objects.all()
     # queryset = Desk.objects.all()
@@ -118,7 +118,7 @@ class FloorDeskNestedViewSetThree(viewsets.ModelViewSet):
 
 class FloorDeskNestedViewSetFour(viewsets.ModelViewSet):
     """
-    This usuall nested serializer on reversed relation using full model data from related model.
+    This nested serializer done by using 'SerializerMethodField'. We override 'get_' function to pass only desks numbers into variable.
     """
     queryset = Floor.objects.all()
     # queryset = Desk.objects.all()

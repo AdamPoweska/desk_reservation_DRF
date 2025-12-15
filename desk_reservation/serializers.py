@@ -68,17 +68,17 @@ class FloorDeskNestedSerializerThree(serializers.ModelSerializer):
 
 
 class FloorDeskNestedSerializerFour(serializers.ModelSerializer):
-    desks = serializers.SerializerMethodField()
+    desk = serializers.SerializerMethodField()
 
     class Meta:
         model = Floor
-        fields = ['id', 'floor_number', 'desks']
+        fields = ['id', 'floor_number', 'desk']
 
-    def get_desks(self, obj):
+    def get_desk(self, obj):
         # Filter only desks numbers: https://www.geeksforgeeks.org/python/how-to-filter-a-nested-serializer-in-django-rest-framework/?utm_source=chatgpt.com
         return [
             {
-                'desks': c.desk_number
+                'desk': c.desk_number
             }
             for c in obj.desks_on_floor.all()
         ]
