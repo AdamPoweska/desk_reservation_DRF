@@ -118,7 +118,7 @@ class FloorDeskNestedViewSetThree(viewsets.ModelViewSet):
 
 class FloorDeskNestedViewSetFour(viewsets.ModelViewSet):
     """
-    This nested serializer done by using 'SerializerMethodField'. We override 'get_' function to pass only desks numbers into variable.
+    This nested serializer is done by using 'SerializerMethodField'. We override 'get_' function to pass only desks numbers into variable.
     """
     queryset = Floor.objects.all()
     # queryset = Desk.objects.all()
@@ -129,12 +129,23 @@ class FloorDeskNestedViewSetFour(viewsets.ModelViewSet):
 
 class FloorDeskNestedViewSetFive(viewsets.ModelViewSet):
     """
-    This nested serializer done by using 'StringRelatedField'.
+    This nested serializer is done by using 'StringRelatedField'.
     """
     queryset = Floor.objects.all()
     # queryset = Desk.objects.all()
     # queryset = Floor.objects.prefetch_related('desk_set') # lepsza optymalizacja niż linia wyżej ale linia wyżej też bedzie w 100% działać
     serializer_class = FloorDeskNestedSerializerFive
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class FloorDeskNestedViewSetSix(viewsets.ModelViewSet):
+    """
+    This nested serializer is done by using 'SlugRelatedField'.
+    """
+    queryset = Floor.objects.all()
+    # queryset = Desk.objects.all()
+    # queryset = Floor.objects.prefetch_related('desk_set') # lepsza optymalizacja niż linia wyżej ale linia wyżej też bedzie w 100% działać
+    serializer_class = FloorDeskNestedSerializerSix
     permission_classes = [permissions.IsAuthenticated]
 
         
