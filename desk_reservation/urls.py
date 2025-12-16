@@ -10,6 +10,7 @@ router.register(f'floor_desk_one', views.FloorDeskNestedViewSetOne, basename='fl
 router.register(f'floor_desk_two', views.FloorDeskNestedViewSetTwo, basename='floor_desk_two')
 router.register(f'floor_desk_three', views.FloorDeskNestedViewSetThree, basename='floor_desk_three')
 router.register(f'floor_desk_four', views.FloorDeskNestedViewSetFour, basename='floor_desk_four')
+router.register(f'floor_desk_five', views.FloorDeskNestedViewSetFive, basename='floor_desk_five')
 router.register(f'workers', views.WorkerViewSet, basename='workers')
 router.register(f'reservations', views.ReservationViewSet, basename='reservations')
 

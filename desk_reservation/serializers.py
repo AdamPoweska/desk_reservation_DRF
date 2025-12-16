@@ -83,6 +83,15 @@ class FloorDeskNestedSerializerFour(serializers.ModelSerializer):
             for c in obj.desks_on_floor.all()
         ]
 
+
+class FloorDeskNestedSerializerFive(serializers.ModelSerializer):
+    desks_on_floor = serializers.StringRelatedField(many=True)
+
+    class Meta:
+        model = Floor
+        fields = ['id', 'floor_number', 'desks_on_floor']
+
+
 class WorkerSerializer(serializers.ModelSerializer):
     # desk_reservation = serializers.PrimaryKeyRelatedField(many=True, queryset=Desk.objects.all())
     # password_check = serializers.BooleanField(label="Generate password automatically?", required=False, default=True) # write_only=True sprawi że hasło będzie można tylko zapisać ale już nie odczytać
