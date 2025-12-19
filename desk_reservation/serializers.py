@@ -75,7 +75,7 @@ class FloorDeskNestedSerializerFour(serializers.ModelSerializer):
         fields = ['id', 'floor_number', 'desk']
 
     def get_desk(self, obj):
-        # Filter only desks numbers: https://www.geeksforgeeks.org/python/how-to-filter-a-nested-serializer-in-django-rest-framework/?utm_source=chatgpt.com
+        # Filter only desks numbers: https://www.geeksforgeeks.org/python/how-to-filter-a-nested-serializer-in-django-rest-framework/
         return [
             {
                 'desk': c.desk_number

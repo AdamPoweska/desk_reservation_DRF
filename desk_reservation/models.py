@@ -23,6 +23,21 @@ class Desk(models.Model):
         return f"{self.floor}-{self.desk_number}"
 
 
+class AvailableDates(models.Model):
+    # https://forum.djangoproject.com/t/create-a-date-difference-generatedfield-in-model/38390/11
+    # https://www.geeksforgeeks.org/python/creating-a-list-of-range-of-dates-in-python/?utm_source=chatgpt.com
+    '''
+    (1) DateRange - model z datami od do
+    (2) Date - model już z samymi datami, który to faktycznie podczepiamy pof model DESK
+        - trzeba bedzie zaimportować to do widoku
+        - tam wygenerować listę za pomocą pand
+        - zwrócić tą listę do modelu Date
+    '''
+    
+    date_start = models.DateField()
+    date_end = models.DateField()
+    date = models.DateField()
+
 class Reservation(models.Model):
     # floor = models.ForeignKey(Floor, on_delete=models.CASCADE)
     desk = models.ForeignKey(Desk, on_delete=models.CASCADE)
