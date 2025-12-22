@@ -124,7 +124,14 @@ class WorkerSerializer(serializers.ModelSerializer):
         return data
 
 
+# class DeskSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Desk
+#         fields = ['id', 'floor', 'desk_number']
+
+
 class ReservationSerializer(serializers.ModelSerializer):
+    # desk_full_info = serializers.PrimaryKeyRelatedField(queryset=Reservation.objects.all(), source='desk_data', many=True)
     reservation_by = serializers.StringRelatedField(default=serializers.CurrentUserDefault(), read_only=True)
 
     class Meta:
@@ -134,12 +141,9 @@ class ReservationSerializer(serializers.ModelSerializer):
             UniqueTogetherValidator(
                 queryset=Reservation.objects.all(),
                 fields=['desk', 'reservation_date']
+            ),
+            UniqueTogetherValidator(
+                queryset=Reservation.objects.all(),
+                fields=['reservation_date', 'reservation_by']
             )
         ]
-
-
-
-# class StartEndDatesSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = StartEndDates
-#         fields = ['date_start', 'date_end']

@@ -28,21 +28,7 @@ class Desk(models.Model):
         return f"{self.floor}-{self.desk_number}"
 
 
-# class StartEndDates(models.Model):
-    '''
-    (1) DateRange - model z datami od-do
-    (2) Date - model już z samymi datami, który to faktycznie podczepiamy pod model DESK
-        - trzeba bedzie zaimportować to do widoku
-        - tam wygenerować listę za pomocą pand
-        - zwrócić tą listę do modelu Date
-    '''
-    # date_and_desk = models.ForeignKey(Desk, on_delete=models.CASCADE, null=True)
-    # date_start = models.DateField()
-    # date_end = models.DateField()
-
-
 class Reservation(models.Model):
-    # floor = models.ForeignKey(Floor, default='1', on_delete=models.CASCADE)
-    desk = models.ForeignKey(Desk, on_delete=models.CASCADE)
+    desk = models.ForeignKey(Desk, related_name='desk_data', on_delete=models.CASCADE)
     reservation_date = models.DateField()
     reservation_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, related_name='reservation_by', blank=True, null=True)
