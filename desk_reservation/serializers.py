@@ -131,16 +131,18 @@ class WorkerSerializer(serializers.ModelSerializer):
 
 
 class ReservationSerializer(serializers.ModelSerializer):
-    # desk_full_info = serializers.PrimaryKeyRelatedField(queryset=Reservation.objects.all(), source='desk_data', many=True)
+    #https://stackoverflow.com/questions/26561640/django-rest-framework-read-nested-data-write-integer
+    desk = DeskSerializer(read_only=True)
+    desk_ids = serializers.PrimaryKeyRelatedField(write_only=True, source='desk', queryset=Desk.objects.all())
     reservation_by = serializers.StringRelatedField(default=serializers.CurrentUserDefault(), read_only=True)
 
     class Meta:
         model = Reservation
-        fields = ['id', 'desk', 'reservation_date', 'reservation_by']
+        fields = ['id', 'desk_ids', 'desk', 'reservation_date', 'reservation_by']
         validators = [
             UniqueTogetherValidator(
                 queryset=Reservation.objects.all(),
-                fields=['desk', 'reservation_date']
+                fields=['desk_ids', 'reservation_date']
             ),
             UniqueTogetherValidator(
                 queryset=Reservation.objects.all(),

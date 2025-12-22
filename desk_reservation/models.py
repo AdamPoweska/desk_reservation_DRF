@@ -29,6 +29,6 @@ class Desk(models.Model):
 
 
 class Reservation(models.Model):
-    desk = models.ForeignKey(Desk, related_name='desk_data', on_delete=models.CASCADE)
+    desk = models.ForeignKey(Desk, on_delete=models.CASCADE) #related_name='desk_data'
     reservation_date = models.DateField()
     reservation_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, related_name='reservation_by', blank=True, null=True)
