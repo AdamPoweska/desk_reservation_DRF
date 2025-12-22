@@ -2,7 +2,7 @@
 from django.contrib.auth.models import User
 from rest_framework import permissions, viewsets, status
 from rest_framework.response import Response
-from desk_reservation.models import Floor, Desk, Reservation
+from desk_reservation.models import *
 from desk_reservation.serializers import *
 from django.db.models import Q
 
@@ -164,4 +164,16 @@ class ReservationViewSet(viewsets.ModelViewSet):
     """
     queryset = Reservation.objects.all()
     serializer_class = ReservationSerializer
-    permission_classes = [IsReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(reservation_by=self.request.user)
+
+
+# class StartEndDatesViewSet(viewsets.ModelViewSet):
+#     """
+#     Set up of starting and ending dates, based on which will be created full list of dates.
+#     """
+#     queryset = StartEndDates.objects.all()
+#     serializer_class = StartEndDatesSerializer
+#     permission_classes = [permissions.IsAdminUser]

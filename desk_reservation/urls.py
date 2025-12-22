@@ -14,6 +14,7 @@ router.register(f'floor_desk_five', views.FloorDeskNestedViewSetFive, basename='
 router.register(f'floor_desk_six', views.FloorDeskNestedViewSetSix, basename='floor_desk_six')
 router.register(f'workers', views.WorkerViewSet, basename='workers')
 router.register(f'reservations', views.ReservationViewSet, basename='reservations')
+# router.register(f'start_end_dates', views.StartEndDatesViewSet, basename='start_end_dates')
 
 #nested routers 1st level
 # desk_nested_router = NestedDefaultRouter(router, r'floor', lookup='floordesks')

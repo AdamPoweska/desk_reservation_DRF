@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User, AbstractUser
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
-from desk_reservation.models import Floor, Desk, Reservation
+from desk_reservation.models import *
 
 
 class FloorSerializer(serializers.ModelSerializer):
@@ -125,6 +125,21 @@ class WorkerSerializer(serializers.ModelSerializer):
 
 
 class ReservationSerializer(serializers.ModelSerializer):
+    reservation_by = serializers.StringRelatedField(default=serializers.CurrentUserDefault(), read_only=True)
+
     class Meta:
         model = Reservation
-        fields = ['desk', 'reservation_date']
+        fields = ['id', 'desk', 'reservation_date', 'reservation_by']
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Reservation.objects.all(),
+                fields=['desk', 'reservation_date']
+            )
+        ]
+
+
+
+# class StartEndDatesSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = StartEndDates
+#         fields = ['date_start', 'date_end']

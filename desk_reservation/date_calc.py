@@ -1,15 +1,23 @@
 from datetime import date, timedelta
 
-def deduction_func(arg_one, arg_two):
+def days_calc(arg_one, arg_two):
+    """
+    Returns list of days (datetime) between given arguments.
+    """
     date_list = []
     dummy_date = arg_one
     while dummy_date <= arg_two:
         date_list.append(dummy_date)
         dummy_date += timedelta(days=1)
-    # result = arg_two - arg_one
     return date_list
 
-start_date = date(2025, 1, 1)
-end_date = date(2025, 1, 31)
+"""
+funkcja działa tu ok ale jest problem w tym że 'DateField" z django != timedelta, nie mogę tego w ten sposób dodać
 
-print(deduction_func(start_date, end_date))
+"""
+
+
+# start_date = date(2025, 1, 1)
+# end_date = date(2025, 1, 31)
+
+# print(days_calc(start_date, end_date))
