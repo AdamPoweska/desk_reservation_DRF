@@ -193,10 +193,10 @@ class NesteDeskReservationSerializer(serializers.ModelSerializer):
 
 
 class FullReservationDataSerializer(serializers.ModelSerializer):
-    desks_data = NesteDeskReservationSerializer(many=True, read_only=True)
+    desks_on_floor = NesteDeskReservationSerializer(many=True, read_only=True)
 
     class Meta:
         model = Floor
-        fields = ['id', 'floor_number', 'desks_data']
+        fields = ['id', 'floor_number', 'desks_on_floor']
 
 

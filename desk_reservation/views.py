@@ -179,6 +179,7 @@ class FullReservationDataViewSet(viewsets.ModelViewSet):
     serializer_class = FullReservationDataSerializer
     permission_classes = [permissions.IsAdminUser]
 
+
 class TestViewset(viewsets.ModelViewSet):
     """
     test on why double nested serializer is not working - test of first nesting
