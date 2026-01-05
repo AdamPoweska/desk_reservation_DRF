@@ -171,11 +171,18 @@ class ReservationViewSet(viewsets.ModelViewSet):
         serializer.save(reservation_by=self.request.user)
     
 
+class FullReservationDataViewSet(viewsets.ModelViewSet):
+    """
+    Reservation data - JSON trimmed for human eye.
+    """
+    queryset = Floor.objects.all()
+    serializer_class = FullReservationDataSerializer
+    permission_classes = [permissions.IsAdminUser]
 
-# class StartEndDatesViewSet(viewsets.ModelViewSet):
-#     """
-#     Set up of starting and ending dates, based on which will be created full list of dates.
-#     """
-#     queryset = StartEndDates.objects.all()
-#     serializer_class = StartEndDatesSerializer
-#     permission_classes = [permissions.IsAdminUser]
+class TestViewset(viewsets.ModelViewSet):
+    """
+    test on why double nested serializer is not working - test of first nesting
+    """
+    queryset = Desk.objects.all()
+    serializer_class = NesteDeskReservationSerializer
+    permission_classes = [permissions.IsAdminUser]
