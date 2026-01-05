@@ -160,7 +160,8 @@ class WorkerViewSet(viewsets.ModelViewSet):
 
 class ReservationViewSet(viewsets.ModelViewSet):
     """
-    Making reservations - CRUD.
+    Making reservations - CRUD. We use 'desk_ids' nested serializer which is write_only and 'desk' nested serializer which is read_only.
+    Validators will only allow for one user to make one desk reservation for one date.
     """
     queryset = Reservation.objects.all()
     serializer_class = ReservationSerializer

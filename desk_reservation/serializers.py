@@ -124,14 +124,9 @@ class WorkerSerializer(serializers.ModelSerializer):
         return data
 
 
-# class DeskSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Desk
-#         fields = ['id', 'floor', 'desk_number']
-
-
 class ReservationSerializer(serializers.ModelSerializer):
     #https://stackoverflow.com/questions/26561640/django-rest-framework-read-nested-data-write-integer
+    #https://dev.to/forhadakhan/automatically-add-logged-in-user-under-createdby-and-updatedby-to-model-in-django-rest-framework-4c9c
     desk = DeskSerializer(read_only=True)
     desk_ids = serializers.PrimaryKeyRelatedField(write_only=True, source='desk', queryset=Desk.objects.all())
     reservation_by = serializers.StringRelatedField(default=serializers.CurrentUserDefault(), read_only=True)
