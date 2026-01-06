@@ -146,50 +146,20 @@ class ReservationSerializer(serializers.ModelSerializer):
         ]
 
 
-"""
-
-
-class SmallDeskSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Desk
-        fields = ['id', 'desk_number']
-
-class FloorDeskNestedSerializerOne(serializers.ModelSerializer):
-    desks_on_floor = SmallDeskSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Floor
-        fields = ['id', 'floor_number', 'desks_on_floor']
-
-class DeskSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Desk
-        fields = ['id', 'floor', 'desk_number']
-
-class FloorDeskNestedSerializerTwo(serializers.ModelSerializer):
-    desks_on_floor = DeskSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Floor
-        fields = ['id', 'floor_number', 'desks_on_floor']
-
-dodaj tylko te dwa na reversed relations:
-        "reservation_date": "2025-11-25",
-        "reservation_by": null
-"""
-
 class SmallReservationSerializer(serializers.ModelSerializer):
+    reservation_by = serializers.StringRelatedField(read_only=True) #StringRelatedField = if there is reltaed object (ForeignKey), then show it as string
+
     class Meta:
         model = Reservation
         fields = ['reservation_date', 'reservation_by']
 
 
 class NesteDeskReservationSerializer(serializers.ModelSerializer):
-    desk_data = SmallReservationSerializer(many=True, read_only=True)
+    reservations = SmallReservationSerializer(many=True, read_only=True)
  
     class Meta:
         model = Desk
-        fields = ['id', 'desk_number', 'desk_data']
+        fields = ['desk_number', 'reservations']
 
 
 class FullReservationDataSerializer(serializers.ModelSerializer):
@@ -197,6 +167,6 @@ class FullReservationDataSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Floor
-        fields = ['id', 'floor_number', 'desks_on_floor']
+        fields = ['floor_number', 'desks_on_floor']
 
 
