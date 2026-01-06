@@ -171,12 +171,21 @@ class ReservationViewSet(viewsets.ModelViewSet):
         serializer.save(reservation_by=self.request.user)
     
 
-class FullReservationDataViewSet(viewsets.ModelViewSet):
+class FullReservationDataForHumansViewSet(viewsets.ModelViewSet):
     """
     Reservation data - JSON trimmed for human eye.
     """
     queryset = Floor.objects.all()
-    serializer_class = FullReservationDataSerializer
+    serializer_class = FullReservationDataForHumansSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+
+class FullReservationDataForMachinesViewSet(viewsets.ModelViewSet):
+    """
+    Reservation data - FULL JSON for machines.
+    """
+    queryset = Floor.objects.all()
+    serializer_class = FullReservationDataForMachinesSerializer
     permission_classes = [permissions.IsAdminUser]
 
 
@@ -185,5 +194,5 @@ class TestViewset(viewsets.ModelViewSet):
     test on why double nested serializer is not working - test of first nesting
     """
     queryset = Desk.objects.all()
-    serializer_class = NesteDeskReservationSerializer
+    serializer_class = NestedDeskReservationSerializer
     permission_classes = [permissions.IsAdminUser]

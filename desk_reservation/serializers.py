@@ -147,14 +147,14 @@ class ReservationSerializer(serializers.ModelSerializer):
 
 
 class SmallReservationSerializer(serializers.ModelSerializer):
-    reservation_by = serializers.StringRelatedField(read_only=True) #StringRelatedField = if there is reltaed object (ForeignKey), then show it as string
+    reservation_by = serializers.StringRelatedField(read_only=True) #StringRelatedField = if there is related object (ForeignKey), then show it as string
 
     class Meta:
         model = Reservation
         fields = ['reservation_date', 'reservation_by']
 
 
-class NesteDeskReservationSerializer(serializers.ModelSerializer):
+class NestedDeskReservationSerializer(serializers.ModelSerializer):
     reservations = SmallReservationSerializer(many=True, read_only=True)
  
     class Meta:
@@ -162,11 +162,24 @@ class NesteDeskReservationSerializer(serializers.ModelSerializer):
         fields = ['desk_number', 'reservations']
 
 
-class FullReservationDataSerializer(serializers.ModelSerializer):
-    desks_on_floor = NesteDeskReservationSerializer(many=True, read_only=True)
+class FullReservationDataForHumansSerializer(serializers.ModelSerializer):
+    desks_on_floor = NestedDeskReservationSerializer(many=True, read_only=True)
 
     class Meta:
         model = Floor
         fields = ['floor_number', 'desks_on_floor']
 
 
+class NestedDeskReservationForMachinesSerializer(serializers.ModelSerializer):
+    reservations = ReservationSerializer(many=True, read_only=True)
+ 
+    class Meta:
+        model = Desk
+        fields = ['desk_number', 'reservations']
+
+class FullReservationDataForMachinesSerializer(serializers.ModelSerializer):
+    desks_on_floor = NestedDeskReservationForMachinesSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Floor
+        fields = ['floor_number', 'desks_on_floor']

@@ -14,7 +14,8 @@ router.register(f'floor_desk_five', views.FloorDeskNestedViewSetFive, basename='
 router.register(f'floor_desk_six', views.FloorDeskNestedViewSetSix, basename='floor_desk_six')
 router.register(f'workers', views.WorkerViewSet, basename='workers')
 router.register(f'reservations', views.ReservationViewSet, basename='reservations')
-router.register(f'fullreservationdata', views.FullReservationDataViewSet, basename='fullreservationdata')
+router.register(f'fullreservationdataforhumans', views.FullReservationDataForHumansViewSet, basename='fullreservationdataforhumans')
+router.register(f'fullreservationdataformachines', views.FullReservationDataForMachinesViewSet, basename='fullreservationdataformachines')
 router.register(f'testviewset', views.TestViewset, basename='testviewset')
 # router.register(f'start_end_dates', views.StartEndDatesViewSet, basename='start_end_dates')
 
