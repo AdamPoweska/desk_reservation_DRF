@@ -3,9 +3,6 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.conf import settings
 from django.contrib.auth.models import User
 
-# from datetime import timedelta
-# from .date_calc import days_calc
-
 
 class Floor(models.Model):
     floor_number = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)]) # unique=True
