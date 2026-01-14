@@ -187,12 +187,3 @@ class FullReservationDataForMachinesViewSet(viewsets.ModelViewSet):
     queryset = Floor.objects.all()
     serializer_class = FullReservationDataForMachinesSerializer
     permission_classes = [permissions.IsAdminUser]
-
-
-class TestViewset(viewsets.ModelViewSet):
-    """
-    test on why double nested serializer is not working - test of first nesting
-    """
-    queryset = Desk.objects.all()
-    serializer_class = NestedDeskReservationSerializer
-    permission_classes = [permissions.IsAdminUser]
