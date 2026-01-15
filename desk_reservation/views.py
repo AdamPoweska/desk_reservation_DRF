@@ -187,3 +187,12 @@ class FullReservationDataForMachinesViewSet(viewsets.ModelViewSet):
     queryset = Floor.objects.all()
     serializer_class = FullReservationDataForMachinesSerializer
     permission_classes = [permissions.IsAdminUser]
+
+
+class FilterDataViewSet(viewsets.ModelViewSet):
+    """
+    One view allowing to filter all data. 
+    """
+    queryset = Floor.objects.all()
+    serializer_class = FullReservationDataForMachinesSerializer
+    permission_classes = [permissions.IsAdminUser]
