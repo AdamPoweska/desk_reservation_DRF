@@ -1,11 +1,10 @@
-# from django.shortcuts import render
 from django.contrib.auth.models import User
-from rest_framework import permissions, viewsets, status
+from rest_framework import generics, permissions, viewsets, status
 from rest_framework.response import Response
 from desk_reservation.models import *
 from desk_reservation.serializers import *
 from django.db.models import Q
-
+from django_filters.rest_framework import DjangoFilterBackend
 
 class IsReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
@@ -189,10 +188,21 @@ class FullReservationDataForMachinesViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAdminUser]
 
 
-class FilterDataViewSet(viewsets.ModelViewSet):
+class FilterDataViewSet(generics.ListAPIView):
     """
-    One view allowing to filter all data. 
+    View with django_filters. 
     """
     queryset = Floor.objects.all()
     serializer_class = FullReservationDataForMachinesSerializer
-    permission_classes = [permissions.IsAdminUser]
+    filter_backends = [DjangoFilterBackend]
+    # filterset_fields = ('floor_number',)
+    filterset_fields = {
+        'floor_number': ['exact'],
+    }
+    # filterset_fields = {
+    #     'floor.desks_on_floor.reservations': ['exact'],
+    #     'reservation__desk': ['exact'],
+    #     'floor_number': ['exact'],
+    #     'date': ['exact', 'gte', 'lte']
+    # }
+    # permission_classes = [permissions.IsAdminUser]

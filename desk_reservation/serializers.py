@@ -177,6 +177,7 @@ class NestedDeskReservationForMachinesSerializer(serializers.ModelSerializer):
         model = Desk
         fields = ['desk_number', 'reservations']
 
+
 class FullReservationDataForMachinesSerializer(serializers.ModelSerializer):
     desks_on_floor = NestedDeskReservationForMachinesSerializer(many=True, read_only=True)
 
