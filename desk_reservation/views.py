@@ -193,15 +193,15 @@ class FilterDataViewSet(generics.ListAPIView):
     """
     View with django_filters. 
     """
-    queryset = Floor.objects.all()
-    serializer_class = FullReservationDataForMachinesSerializer
+    # queryset = Floor.objects.all()
+    queryset = Reservation.objects.all()
+    serializer_class = ReservationSerializer
     filter_backends = [DjangoFilterBackend]
     # filterset_fields = ('floor_number',)
     filterset_fields = {
-        'floor_number': ['exact'],
-        'desks_on_floor': ['exact'],
-        # 'desks_on_floor__reservations': ['exact'],
-        'desks_on_floor__reservation_date': ['exact'],
+        'desk': ['exact'],
+        'reservation_date': ['exact'],
+        'reservation_by': ['exact'],
     }
         # 'desks_on_floor__reservation_by': ['exact'],
         # 'reservations__desks_on_floor__floor': ['exact'],
