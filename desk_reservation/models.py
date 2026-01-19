@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 
 class Floor(models.Model):
-    floor_number = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)]) # unique=True
+    floor_number = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)],) # unique=True
 
     def __str__(self):
         return f"{self.floor_number}"

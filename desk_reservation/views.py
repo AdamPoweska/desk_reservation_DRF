@@ -189,6 +189,7 @@ class FullReservationDataForMachinesViewSet(viewsets.ModelViewSet):
 
 
 class FilterDataViewSet(generics.ListAPIView):
+    # https://django-filter.readthedocs.io/en/stable/
     """
     View with django_filters. 
     """
@@ -198,11 +199,13 @@ class FilterDataViewSet(generics.ListAPIView):
     # filterset_fields = ('floor_number',)
     filterset_fields = {
         'floor_number': ['exact'],
+        'desks_on_floor': ['exact'],
+        # 'desks_on_floor__reservations': ['exact'],
+        'desks_on_floor__reservation_date': ['exact'],
     }
-    # filterset_fields = {
-    #     'floor.desks_on_floor.reservations': ['exact'],
-    #     'reservation__desk': ['exact'],
-    #     'floor_number': ['exact'],
-    #     'date': ['exact', 'gte', 'lte']
-    # }
+        # 'desks_on_floor__reservation_by': ['exact'],
+        # 'reservations__desks_on_floor__floor': ['exact'],
+        # 'reservation__desk': ['exact'],
+        # 'floor_number': ['exact'],
+        # 'date': ['exact', 'gte', 'lte']
     # permission_classes = [permissions.IsAdminUser]
