@@ -4,7 +4,8 @@ from rest_framework.response import Response
 from desk_reservation.models import *
 from desk_reservation.serializers import *
 from django.db.models import Q
-from django_filters.rest_framework import DjangoFilterBackend
+from django_filters.rest_framework import DjangoFilterBackend, FilterSet
+import django_filters
 
 class IsReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
@@ -193,19 +194,27 @@ class FilterDataViewSet(generics.ListAPIView):
     """
     View with django_filters. 
     """
-    # queryset = Floor.objects.all()
     queryset = Reservation.objects.all()
     serializer_class = ReservationSerializer
     filter_backends = [DjangoFilterBackend]
-    # filterset_fields = ('floor_number',)
     filterset_fields = {
         'desk': ['exact'],
         'reservation_date': ['exact'],
         'reservation_by': ['exact'],
     }
-        # 'desks_on_floor__reservation_by': ['exact'],
-        # 'reservations__desks_on_floor__floor': ['exact'],
-        # 'reservation__desk': ['exact'],
-        # 'floor_number': ['exact'],
-        # 'date': ['exact', 'gte', 'lte']
-    # permission_classes = [permissions.IsAdminUser]
+
+
+class FloorFilter(FilterSet):
+    floor_number = django_filters.NumberFilter(
+        field_name='floor__floor_number'
+    )
+
+    class Meta:
+        model = Desk
+        fields = ['floor_number']
+
+class FloorFilterViewSet(generics.ListAPIView):
+    queryset = Desk.objects.all()
+    serializer_class = DeskSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = FloorFilter

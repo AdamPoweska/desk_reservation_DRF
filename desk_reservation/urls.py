@@ -26,5 +26,6 @@ urlpatterns = [
     path('', include(router.urls)),
     # path('', include(desk_nested_router.urls)),
     path('floors/', views.FilterDataViewSet.as_view()),
+    path('floors_2nd/', views.FloorFilterViewSet.as_view()),
     path('api-auth/', include('rest_framework.urls')), # 'http://127.0.0.1:8000/api-auth/login/' or 'http://127.0.0.1:8000/api-auth/logout/'
 ]
