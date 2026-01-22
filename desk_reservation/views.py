@@ -238,3 +238,52 @@ class ExactFilterViewSet(generics.ListAPIView):
     serializer_class = DeskSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = ExactFilter
+
+
+class FinalExactFilter(FilterSet):
+    floor_number = django_filters.NumberFilter(
+        field_name='desk__floor__floor_number'
+    )
+    desk_number = django_filters.NumberFilter(
+        field_name='desk__desk_number'
+    )
+
+    class Meta:
+        model = Reservation
+        fields = ['floor_number', 'desk_number', 'reservation_date', 'reservation_by'] #'floor_number',
+
+
+class FullReservationDataForFilterView(generics.ListAPIView):
+    """
+    Reservation data - FULL JSON for machines.
+    """
+    queryset = Reservation.objects.all()
+    serializer_class = FullReservationDataForFilterSerializer
+    permission_classes = [permissions.IsAdminUser]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = FinalExactFilter
+
+
+class SmallReservationViewSet(viewsets.ModelViewSet):
+    """
+    Reservation data - FULL JSON for machines.
+    """
+    queryset = Reservation.objects.all()
+    serializer_class = FullReservationDataForFilterSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+
+# class FullReservationDataForFilterView(generics.ListAPIView):
+#     # https://django-filter.readthedocs.io/en/stable/
+#     """
+#     View with django_filters. 
+#     """
+#     queryset = Reservation.objects.all()
+#     serializer_class = FullReservationDataForFilterSerializer
+#     filter_backends = [DjangoFilterBackend]
+#     filterset_fields = {
+#         'floor_number': ['exact'],
+#         'desk_number': ['exact'],
+#         'reservation_date': ['exact'],
+#         'reservation_by': ['exact'],
+#     }

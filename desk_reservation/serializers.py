@@ -124,6 +124,12 @@ class WorkerSerializer(serializers.ModelSerializer):
         return data
 
 
+class SmallReservationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reservation
+        fields = ['desk', 'reservation_date', 'reservation_by']
+
+
 class ReservationSerializer(serializers.ModelSerializer):
     #https://stackoverflow.com/questions/26561640/django-rest-framework-read-nested-data-write-integer
     #https://dev.to/forhadakhan/automatically-add-logged-in-user-under-createdby-and-updatedby-to-model-in-django-rest-framework-4c9c
@@ -186,3 +192,22 @@ class FullReservationDataForMachinesSerializer(serializers.ModelSerializer):
         fields = ['floor_number', 'desks_on_floor']
 
 
+class MinimalDeskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Desk
+        fields = ['desk_number']
+
+
+class MinimalFloorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Floor
+        fields = ['floor_number']
+
+
+class FullReservationDataForFilterSerializer(serializers.ModelSerializer):
+    floor_number = serializers.IntegerField(source='desk.floor.floor_number')
+    desk_number = serializers.IntegerField(source='desk.desk_number')
+
+    class Meta:
+        model = Reservation
+        fields = ['floor_number', 'desk_number', 'reservation_date', 'reservation_by']
