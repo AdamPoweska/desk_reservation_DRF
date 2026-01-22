@@ -184,3 +184,5 @@ class FullReservationDataForMachinesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Floor
         fields = ['floor_number', 'desks_on_floor']
+
+

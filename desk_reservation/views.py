@@ -206,7 +206,7 @@ class FilterDataViewSet(generics.ListAPIView):
 
 class FloorFilter(FilterSet):
     floor_number = django_filters.NumberFilter(
-        field_name='floor__floor_number'
+        field_name='floor'
     )
 
     class Meta:
@@ -218,3 +218,23 @@ class FloorFilterViewSet(generics.ListAPIView):
     serializer_class = DeskSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = FloorFilter
+
+
+class ExactFilter(FilterSet):
+    floor_number = django_filters.NumberFilter(
+        field_name='floor'
+    )
+    desk_number = django_filters.NumberFilter(
+        field_name='desk_number'
+    )
+
+    class Meta:
+        model = Desk
+        fields = ['floor_number', 'desk_number']
+
+
+class ExactFilterViewSet(generics.ListAPIView):
+    queryset = Desk.objects.all()
+    serializer_class = DeskSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = ExactFilter
