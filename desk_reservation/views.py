@@ -254,9 +254,6 @@ class FinalExactFilter(FilterSet):
 
 
 class FullReservationDataForFilterView(generics.ListAPIView):
-    """
-    Reservation data - FULL JSON for machines.
-    """
     queryset = Reservation.objects.all()
     serializer_class = FullReservationDataForFilterSerializer
     permission_classes = [permissions.IsAdminUser]
@@ -265,11 +262,31 @@ class FullReservationDataForFilterView(generics.ListAPIView):
 
 
 class SmallReservationViewSet(viewsets.ModelViewSet):
-    """
-    Reservation data - FULL JSON for machines.
-    """
     queryset = Reservation.objects.all()
     serializer_class = FullReservationDataForFilterSerializer
     permission_classes = [permissions.IsAdminUser]
+
+#####
+
+class FinalExactFilterWithEmptyDesks(FilterSet):
+    reservation_date = django_filters.DateFilter(
+        field_name='reservations__reservation_date'
+    )
+    reservation_by = django_filters.Filter(
+        field_name='reservations__reservation_by'
+    )
+
+    class Meta:
+        model = Desk
+        fields = ['floor', 'desk_number', 'reservation_date', 'reservation_by']
+
+
+class FullReservationDataForFilterWithEmptyDesksView(generics.ListAPIView):
+    queryset = Desk.objects.all()
+    serializer_class = FilterSerializerWithEpmtyDesks
+    permission_classes = [permissions.IsAdminUser]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = FinalExactFilterWithEmptyDesks
+
 
 
