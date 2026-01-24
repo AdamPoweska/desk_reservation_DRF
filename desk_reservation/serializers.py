@@ -207,6 +207,7 @@ class MinimalFloorSerializer(serializers.ModelSerializer):
 class FullReservationDataForFilterSerializer(serializers.ModelSerializer):
     floor_number = serializers.IntegerField(source='desk.floor.floor_number')
     desk_number = serializers.IntegerField(source='desk.desk_number')
+    reservation_by = serializers.StringRelatedField()
 
     class Meta:
         model = Reservation

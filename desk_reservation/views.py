@@ -244,7 +244,7 @@ class FinalExactFilter(FilterSet):
     floor_number = django_filters.NumberFilter(
         field_name='desk__floor__floor_number'
     )
-    desk_number = django_filters.NumberFilter(
+    desk_number = django_filters.Filter(
         field_name='desk__desk_number'
     )
 
@@ -273,17 +273,3 @@ class SmallReservationViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAdminUser]
 
 
-# class FullReservationDataForFilterView(generics.ListAPIView):
-#     # https://django-filter.readthedocs.io/en/stable/
-#     """
-#     View with django_filters. 
-#     """
-#     queryset = Reservation.objects.all()
-#     serializer_class = FullReservationDataForFilterSerializer
-#     filter_backends = [DjangoFilterBackend]
-#     filterset_fields = {
-#         'floor_number': ['exact'],
-#         'desk_number': ['exact'],
-#         'reservation_date': ['exact'],
-#         'reservation_by': ['exact'],
-#     }
