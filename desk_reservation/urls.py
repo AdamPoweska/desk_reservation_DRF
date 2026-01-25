@@ -32,5 +32,6 @@ urlpatterns = [
     path('floors_2nd/', views.FloorFilterViewSet.as_view()),
     path('floors_3rd/', views.FullReservationDataForFilterView.as_view()),
     path('floors_4th/', views.FullReservationDataForFilterWithEmptyDesksView.as_view()),
+    path('floors_5th/', views.DeskAvailabilityView.as_view()),
     path('api-auth/', include('rest_framework.urls')), # 'http://127.0.0.1:8000/api-auth/login/' or 'http://127.0.0.1:8000/api-auth/logout/'
 ]

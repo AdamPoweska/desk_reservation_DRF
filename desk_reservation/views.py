@@ -266,7 +266,6 @@ class SmallReservationViewSet(viewsets.ModelViewSet):
     serializer_class = FullReservationDataForFilterSerializer
     permission_classes = [permissions.IsAdminUser]
 
-#####
 
 class FinalExactFilterWithEmptyDesks(FilterSet):
     reservation_date = django_filters.DateFilter(
@@ -282,11 +281,35 @@ class FinalExactFilterWithEmptyDesks(FilterSet):
 
 
 class FullReservationDataForFilterWithEmptyDesksView(generics.ListAPIView):
-    queryset = Desk.objects.all()
+    queryset = Desk.objects.all().distinct() # distinct usuwa powielenia
     serializer_class = FilterSerializerWithEpmtyDesks
     permission_classes = [permissions.IsAdminUser]
     filter_backends = [DjangoFilterBackend]
     filterset_class = FinalExactFilterWithEmptyDesks
 
+class DeskAvailabilityFilter(FilterSet):
+    date = django_filters.DateFilter(
+        method="filter_by_date",
+        label="Availability date"
+    )
+
+    class Meta:
+        model = Desk
+        fields = ["floor", "desk_number", "date"]
+
+    def filter_by_date(self, queryset, name, value):
+        return queryset.exclude(
+            reservations__reservation_date=value
+        )
+    
+class DeskAvailabilityView(generics.ListAPIView):
+    """
+    Date needs to be provided in order to receive list of empty desks.
+    Only EPTY desks will be shown for given date.
+    """
+    queryset = Desk.objects.all()
+    serializer_class = DeskAvailabilitySerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = DeskAvailabilityFilter
 
 

@@ -216,7 +216,7 @@ class FullReservationDataForFilterSerializer(serializers.ModelSerializer):
 
 class FullReservationSerializerForExactFilter(serializers.ModelSerializer):
     reservation_by = serializers.StringRelatedField()
-    
+
     class Meta:
         model = Reservation
         fields = ['reservation_date', 'reservation_by']
@@ -228,3 +228,9 @@ class FilterSerializerWithEpmtyDesks(serializers.ModelSerializer):
     class Meta:
         model = Desk
         fields = ['floor', 'desk_number', 'reservations']
+  
+    
+class DeskAvailabilitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Desk
+        fields = ["floor", "desk_number"]
