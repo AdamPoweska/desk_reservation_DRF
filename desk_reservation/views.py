@@ -299,7 +299,8 @@ class DeskAvailabilityFilter(FilterSet):
 
     def filter_by_date(self, queryset, name, value):
         return queryset.exclude(
-            reservations__reservation_date=value
+            reservations__reservation_date=value,
+            reservations__reservation_by__isnull=False
         )
     
 class DeskAvailabilityView(generics.ListAPIView):
