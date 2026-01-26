@@ -2,6 +2,7 @@ from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 # from rest_framework_nested.routers import NestedDefaultRouter
 from desk_reservation import views
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 router = DefaultRouter()
 router.register(f'desk', views.DeskViewSet, basename='desk')
@@ -34,4 +35,6 @@ urlpatterns = [
     path('floors_4th/', views.FullReservationDataForFilterWithEmptyDesksView.as_view()),
     path('floors_5th/', views.DeskAvailabilityView.as_view()),
     path('api-auth/', include('rest_framework.urls')), # 'http://127.0.0.1:8000/api-auth/login/' or 'http://127.0.0.1:8000/api-auth/logout/'
+    path('api/schema/', SpectacularAPIView.as_view(), name="schema"),
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
 ]
