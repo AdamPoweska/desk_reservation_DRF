@@ -17,7 +17,7 @@ class IsReadOnly(permissions.BasePermission):
 
 class FloorViewSet(viewsets.ModelViewSet):
     """
-    CRUD actions.
+    CRUD actions - Floors.
     """
     # queryset = Floor.objects.filter(floor_number__endswith=0) | Floor.objects.filter(floor_number__startswith=2) # | == OR
     # queryset = Floor.objects.filter(~Q(floor_number=1) & ~Q(floor_number__startswith=2) & ~Q(floor_number__startswith=3)) # ~ == NOT, & == AND (in Q we use "&" as AND, the usuall comma "," will act simillary to & but it will not allow to group: "filter(Q(A) | Q(B), Q(C))" is not equal to "filter(Q(A) | (Q(B) & Q(C)))")
@@ -30,7 +30,7 @@ class FloorViewSet(viewsets.ModelViewSet):
 
 class DeskViewSet(viewsets.ModelViewSet):
     """
-    CRUD actions.
+    CRUD actions - Desks on related Floors.
     """
     serializer_class = DeskSerializer
     # https://stackoverflow.com/questions/49134679/drf-check-if-an-object-already-exist-in-db-when-receiving-a-request
@@ -48,12 +48,12 @@ class DeskViewSet(viewsets.ModelViewSet):
         if desk_number is None or str(desk_number).strip() == "":
             return Response({'message': 'Desk can not be empty'}, status=status.HTTP_400_BAD_REQUEST)
 
-        """
-        get_or_create - Returns a tuple of (object, created), where object is the retrieved or created object 
-        and created is a boolean specifying whether a new object was created.
-        If an object is found, get_or_create() returns a tuple of that object and False. created = False, defaults= is ignored
-        If an object is not found, get_or_create() creates a new object. defaults= <- additional fields for creating object
-        """
+        
+        # get_or_create - Returns a tuple of (object, created), where object is the retrieved or created object 
+        # and created is a boolean specifying whether a new object was created.
+        # If an object is found, get_or_create() returns a tuple of that object and False. created = False, defaults= is ignored
+        # If an object is not found, get_or_create() creates a new object. defaults= <- additional fields for creating object
+        
         desk, created = Desk.objects.get_or_create(
             floor=floor,
             desk_number=desk_number,
@@ -64,15 +64,14 @@ class DeskViewSet(viewsets.ModelViewSet):
             return Response({'message': 'Desk number already exists on given floor'}, status=status.HTTP_400_BAD_REQUEST)
         
 
-        """
-        Zgodność z REST — po POST powinieneś zwrócić 201 Created i w nagłówku 
-        Location podać adres nowo utworzonego zasobu.
+        # Zgodność z REST — po POST powinieneś zwrócić 201 Created i w nagłówku 
+        # Location podać adres nowo utworzonego zasobu.
 
-        Klient API (np. frontend, Postman, inny mikroserwis) może dzięki temu od razu przejść do tego zasobu, 
-        bez szukania jego id.
+        # Klient API (np. frontend, Postman, inny mikroserwis) może dzięki temu od razu przejść do tego zasobu, 
+        # bez szukania jego id.
         
-        Nagłówek wyświetli się tylko jeżeli mamy HyperlinkedModelSerializer albo dodamy nagłówek 'url' ręcznie.
-        """
+        # Nagłówek wyświetli się tylko jeżeli mamy HyperlinkedModelSerializer albo dodamy nagłówek 'url' ręcznie.
+
         headhers = self.get_success_headers(serializer.data)
         return Response(
             DeskSerializer(desk).data,
@@ -151,7 +150,7 @@ class FloorDeskNestedViewSetSix(viewsets.ModelViewSet):
         
 class WorkerViewSet(viewsets.ModelViewSet):
     """
-    CRUD actions.
+    CRUD actions - Workers.
     """
     queryset = User.objects.all()
     serializer_class = WorkerSerializer
@@ -305,6 +304,7 @@ class DeskAvailabilityFilter(FilterSet):
     
 class DeskAvailabilityView(generics.ListAPIView):
     """
+    Returns list of available desks for given date.
     Date needs to be provided in order to receive list of empty desks.
     Only EPTY desks will be shown for given date.
     """

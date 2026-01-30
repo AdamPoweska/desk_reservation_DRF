@@ -5,6 +5,9 @@ from desk_reservation.models import *
 
 
 class FloorSerializer(serializers.ModelSerializer):
+    """
+    Basic serializer for Floor model.
+    """
     class Meta:
         model = Floor
         fields = ['id', 'floor_number']
@@ -17,6 +20,9 @@ class FloorSerializer(serializers.ModelSerializer):
 
 
 class DeskSerializer(serializers.ModelSerializer):
+    """
+    Basic serializer for Desk model.
+    """
     class Meta:
         model = Desk
         fields = ['id', 'floor', 'desk_number']
@@ -28,12 +34,18 @@ class DeskSerializer(serializers.ModelSerializer):
 
 
 class SmallDeskSerializer(serializers.ModelSerializer):
+    """
+    Smaller serializer for Desk model - excludes 'floor' field.
+    """
     class Meta:
         model = Desk
         fields = ['id', 'desk_number']
 
 
 class FloorDeskNestedSerializerOne(serializers.ModelSerializer):
+    """
+    Nested serializer Floor > Desk, which uses only 'id', 'desk_number' fields from Desk model.
+    """
     desks_on_floor = SmallDeskSerializer(many=True, read_only=True)
 
     class Meta:
@@ -52,6 +64,9 @@ class FloorDeskNestedSerializerOne(serializers.ModelSerializer):
     #     return value
 
 class FloorDeskNestedSerializerTwo(serializers.ModelSerializer):
+    """
+    Nested serializer Floor > Desk, which uses all fields from Desk model.
+    """
     desks_on_floor = DeskSerializer(many=True, read_only=True)
 
     class Meta:
@@ -60,6 +75,9 @@ class FloorDeskNestedSerializerTwo(serializers.ModelSerializer):
 
 
 class FloorDeskNestedSerializerThree(serializers.ModelSerializer):
+    """
+    Nested serializer Floor > Desk, which shows PK values from Desk model.
+    """
     desks = serializers.PrimaryKeyRelatedField(queryset=Floor.objects.all(), source='desks_on_floor', many=True)
 
     class Meta:
@@ -68,6 +86,9 @@ class FloorDeskNestedSerializerThree(serializers.ModelSerializer):
 
 
 class FloorDeskNestedSerializerFour(serializers.ModelSerializer):
+    """
+    Nested serializer Floor > Desk, which uses 'get_' functions to obtain data from Desk model.
+    """
     desk = serializers.SerializerMethodField()
 
     class Meta:
@@ -85,6 +106,9 @@ class FloorDeskNestedSerializerFour(serializers.ModelSerializer):
 
 
 class FloorDeskNestedSerializerFive(serializers.ModelSerializer):
+    """
+    Nested serializer Floor > Desk, which shows __str__ values from Desk model.
+    """
     desks_on_floor = serializers.StringRelatedField(many=True)
 
     class Meta:
@@ -93,6 +117,9 @@ class FloorDeskNestedSerializerFive(serializers.ModelSerializer):
 
 
 class FloorDeskNestedSerializerSix(serializers.ModelSerializer):
+    """
+    Nested serializer Floor > Desk, which shows PK values from Desk model using SlugRelatedField.
+    """
     desks_on_floor = serializers.SlugRelatedField(many=True, read_only=True, slug_field='desk_number')
 
     class Meta:
