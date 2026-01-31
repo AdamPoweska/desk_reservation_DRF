@@ -260,18 +260,23 @@ class FullReservationSerializer(serializers.ModelSerializer):
 
     #     return data
     
-    # create is not needed - overriding it with above validate
+
     def create(self, validated_data):
         desk_number = validated_data.pop('desk_number')
         floor_number = validated_data.pop('floor_number')
 
-        # desk = Desk.objects.get(id=desk_id)
-        floor = Floor.objects.get(floor_number=floor_number)
-        # floor = Floor.objects.get(id=floor_id)
-        desk = Desk.objects.get(desk_number=desk_number, floor=floor)
+        try:
+            floor = Floor.objects.get(floor_number=floor_number)
+        except Floor.DoesNotExist:
+            raise serializers.ValidationError({"floor_number": "There is no such floor number"})
 
-        # validated_data['desk'] = desk
-        # validated_data['floor'] = floor
+        try:
+            desk = Desk.objects.get(desk_number=desk_number, floor=floor)
+        except Desk.DoesNotExist:
+            raise serializers.ValidationError({"desk_number": "There is no such desk number"})
+
+        if Reservation.objects.filter(desk=desk, reservation_date=validated_data['reservation_date']).exists():
+            raise serializers.ValidationError({"reservation_date": "This desk is already reserved"})
 
         reservation = Reservation.objects.create(
             desk=desk,
