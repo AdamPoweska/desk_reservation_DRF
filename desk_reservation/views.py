@@ -170,6 +170,19 @@ class ReservationViewSet(viewsets.ModelViewSet):
         serializer.save(reservation_by=self.request.user)
     
 
+class FullReservationViewSet(viewsets.ModelViewSet):
+    """
+    Making reservations - CRUD. We use separate "desk_number" and "floor_number" fields for POST.
+    Validators will only allow for one user to make one desk reservation for one date.
+    """
+    queryset = Reservation.objects.all()
+    serializer_class = FullReservationSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(reservation_by=self.request.user)
+
+
 class FullReservationDataForHumansViewSet(viewsets.ModelViewSet):
     """
     Reservation data - JSON trimmed for human eye.

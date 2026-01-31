@@ -128,6 +128,9 @@ class FloorDeskNestedSerializerSix(serializers.ModelSerializer):
 
 
 class WorkerSerializer(serializers.ModelSerializer):
+    """
+    Serializer for User from django.contrib.auth.models.
+    """
     # desk_reservation = serializers.PrimaryKeyRelatedField(many=True, queryset=Desk.objects.all())
     # password_check = serializers.BooleanField(label="Generate password automatically?", required=False, default=True) # write_only=True sprawi że hasło będzie można tylko zapisać ale już nie odczytać
     password = serializers.CharField(required=False, help_text='password will be generated automatically', write_only=False) # write_only=True - chroni hasło, żeby nie wysyłać go w odpowiedzi API
@@ -152,12 +155,19 @@ class WorkerSerializer(serializers.ModelSerializer):
 
 
 class SmallReservationSerializer(serializers.ModelSerializer):
+    """
+    Basic serializer for Reservation model with no additional options.
+    """
     class Meta:
         model = Reservation
         fields = ['desk', 'reservation_date', 'reservation_by']
 
 
 class ReservationSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Reservation model, UniqueTogetherValidator applied, "desk_ids" field is write_only, "reservation_by" is read_only.
+    "desk_ids" show __str__ of Desk model.
+    """
     #https://stackoverflow.com/questions/26561640/django-rest-framework-read-nested-data-write-integer
     #https://dev.to/forhadakhan/automatically-add-logged-in-user-under-createdby-and-updatedby-to-model-in-django-rest-framework-4c9c
     desk = DeskSerializer(read_only=True)
@@ -178,6 +188,100 @@ class ReservationSerializer(serializers.ModelSerializer):
             )
         ]
 
+
+class FullReservationSerializer(serializers.ModelSerializer):
+    """
+    Full serializer for Reservation model, UniqueTogetherValidator applied, "desk_ids" field is write_only, "reservation_by" is read_only.
+    Floor and Desk number can be posted in separate fields.
+    """   
+    # writable ForeignKey for create()
+    # desk = serializers.PrimaryKeyRelatedField(read_only=True)
+    # floor = serializers.PrimaryKeyRelatedField(read_only=True)
+    
+    # fields for writing only
+    floor_number = serializers.IntegerField(write_only=True)
+    desk_number = serializers.IntegerField(write_only=True)
+    
+    reservation_by = serializers.StringRelatedField(
+        default=serializers.CurrentUserDefault(), 
+        read_only=True
+    )
+
+    # fields to show not as PK but as actual values
+    desk_display = serializers.SerializerMethodField()
+    floor_display = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Reservation
+        fields = [
+            # 'id',
+            # 'floor',
+            'floor_number',
+            'floor_display',
+            # 'desk',
+            'desk_number',
+            'desk_display',
+            'reservation_date',
+            'reservation_by'
+        ]
+        
+        # validators = [
+        #     UniqueTogetherValidator(
+        #         queryset=Reservation.objects.all(),
+        #         fields=['desk', 'reservation_date']
+        #     ),
+            # UniqueTogetherValidator(
+            #     queryset=Reservation.objects.all(),
+            #     fields=['reservation_date', 'reservation_by']
+            # )
+        # ]
+    
+    # def get_desk(self, obj):
+    #     return obj.desk.desk_number
+
+    def get_desk_display(self, obj):
+        return obj.desk.desk_number
+    
+    # def get_floor(self, obj):
+    #     return obj.desk.floor.floor_number
+    
+    def get_floor_display(self, obj):
+        return obj.desk.floor.floor_number
+    
+    # def validate(self, data):
+    #     floor_number = data.get('floor_number')
+    #     desk_number = data.get('desk_number')
+        
+    #     floor, _ = Floor.objects.get_or_create(floor_number=floor_number)
+    #     desk, _ = Desk.objects.get_or_create(desk_number=desk_number, floor=)
+
+    #     data['floor'] = floor
+    #     data['desk'] = desk
+
+    #     return data
+    
+    # create is not needed - overriding it with above validate
+    def create(self, validated_data):
+        desk_number = validated_data.pop('desk_number')
+        floor_number = validated_data.pop('floor_number')
+
+        # desk = Desk.objects.get(id=desk_id)
+        floor = Floor.objects.get(floor_number=floor_number)
+        # floor = Floor.objects.get(id=floor_id)
+        desk = Desk.objects.get(desk_number=desk_number, floor=floor)
+
+        # validated_data['desk'] = desk
+        # validated_data['floor'] = floor
+
+        reservation = Reservation.objects.create(
+            desk=desk,
+            # floor=floor,
+            reservation_date=validated_data['reservation_date'],
+            reservation_by=self.context['request'].user  # jeśli chcesz ustawiać user
+        )
+
+        return reservation
+        
 
 class SmallReservationSerializer(serializers.ModelSerializer):
     reservation_by = serializers.StringRelatedField(read_only=True) #StringRelatedField = if there is related object (ForeignKey), then show it as string
