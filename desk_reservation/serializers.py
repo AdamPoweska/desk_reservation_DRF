@@ -194,9 +194,6 @@ class FullReservationSerializer(serializers.ModelSerializer):
     Full serializer for Reservation model, UniqueTogetherValidator applied, "desk_ids" field is write_only, "reservation_by" is read_only.
     Floor and Desk number can be posted in separate fields.
     """   
-    # writable ForeignKey for create()
-    # desk = serializers.PrimaryKeyRelatedField(read_only=True)
-    # floor = serializers.PrimaryKeyRelatedField(read_only=True)
     
     # fields for writing only
     floor_number = serializers.IntegerField(write_only=True)
@@ -225,26 +222,16 @@ class FullReservationSerializer(serializers.ModelSerializer):
             'reservation_by'
         ]
         
-        # validators = [
-        #     UniqueTogetherValidator(
-        #         queryset=Reservation.objects.all(),
-        #         fields=['desk', 'reservation_date']
-        #     ),
-            # UniqueTogetherValidator(
-            #     queryset=Reservation.objects.all(),
-            #     fields=['reservation_date', 'reservation_by']
-            # )
-        # ]
-    
-    # def get_desk(self, obj):
-    #     return obj.desk.desk_number
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Reservation.objects.all(),
+                fields=['reservation_date', 'reservation_by']
+            )
+        ]
 
     def get_desk_display(self, obj):
         return obj.desk.desk_number
-    
-    # def get_floor(self, obj):
-    #     return obj.desk.floor.floor_number
-    
+        
     def get_floor_display(self, obj):
         return obj.desk.floor.floor_number
     
@@ -280,9 +267,9 @@ class FullReservationSerializer(serializers.ModelSerializer):
 
         reservation = Reservation.objects.create(
             desk=desk,
-            # floor=floor,
+            # floor=floor, # floor is under desk
             reservation_date=validated_data['reservation_date'],
-            reservation_by=self.context['request'].user  # jeśli chcesz ustawiać user
+            reservation_by=self.context['request'].user
         )
 
         return reservation
