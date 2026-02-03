@@ -204,7 +204,7 @@ class FullReservationDataForMachinesViewSet(viewsets.ModelViewSet):
 class FilterDataViewSet(generics.ListAPIView):
     # https://django-filter.readthedocs.io/en/stable/
     """
-    View with django_filters. 
+    Basic view with django_filters. 
     """
     queryset = Reservation.objects.all()
     serializer_class = ReservationSerializer
@@ -217,6 +217,9 @@ class FilterDataViewSet(generics.ListAPIView):
 
 
 class FloorFilter(FilterSet):
+    """
+    Filter for FloorFilterViewSet.
+    """
     floor_number = django_filters.NumberFilter(
         field_name='floor'
     )
@@ -226,6 +229,9 @@ class FloorFilter(FilterSet):
         fields = ['floor_number']
 
 class FloorFilterViewSet(generics.ListAPIView):
+    """
+    1st level filter allowing for filtering by floor number, showing floor and related desks.
+    """
     queryset = Desk.objects.all()
     serializer_class = DeskSerializer
     filter_backends = [DjangoFilterBackend]
@@ -233,6 +239,9 @@ class FloorFilterViewSet(generics.ListAPIView):
 
 
 class ExactFilter(FilterSet):
+    """
+    Filter for ExactFilterViewSet.
+    """
     floor_number = django_filters.NumberFilter(
         field_name='floor'
     )
@@ -245,14 +254,17 @@ class ExactFilter(FilterSet):
         fields = ['floor_number', 'desk_number']
 
 
-class ExactFilterViewSet(generics.ListAPIView):
-    queryset = Desk.objects.all()
-    serializer_class = DeskSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_class = ExactFilter
+# class ExactFilterViewSet(generics.ListAPIView):
+#     queryset = Desk.objects.all()
+#     serializer_class = DeskSerializer
+#     filter_backends = [DjangoFilterBackend]
+#     filterset_class = ExactFilter
 
 
 class FinalExactFilter(FilterSet):
+    """
+    Filter for FullReservationDataForFilterView.
+    """
     floor_number = django_filters.NumberFilter(
         field_name='desk__floor__floor_number'
     )
@@ -266,6 +278,15 @@ class FinalExactFilter(FilterSet):
 
 
 class FullReservationDataForFilterView(generics.ListAPIView):
+    """
+    View to show data in concise way:
+    {
+        "floor_number": ...,
+        "desk_number": ...,
+        "reservation_date": ...,
+        "reservation_by": ...
+    },
+    """
     queryset = Reservation.objects.all()
     serializer_class = FullReservationDataForFilterSerializer
     permission_classes = [permissions.IsAdminUser]
@@ -273,13 +294,16 @@ class FullReservationDataForFilterView(generics.ListAPIView):
     filterset_class = FinalExactFilter
 
 
-class SmallReservationViewSet(viewsets.ModelViewSet):
-    queryset = Reservation.objects.all()
-    serializer_class = FullReservationDataForFilterSerializer
-    permission_classes = [permissions.IsAdminUser]
+# class SmallReservationViewSet(viewsets.ModelViewSet):
+#     queryset = Reservation.objects.all()
+#     serializer_class = FullReservationDataForFilterSerializer
+#     permission_classes = [permissions.IsAdminUser]
 
 
 class FinalExactFilterWithEmptyDesks(FilterSet):
+    """
+    Filter for FullReservationDataForFilterWithEmptyDesksView .
+    """
     reservation_date = django_filters.DateFilter(
         field_name='reservations__reservation_date'
     )
@@ -293,13 +317,20 @@ class FinalExactFilterWithEmptyDesks(FilterSet):
 
 
 class FullReservationDataForFilterWithEmptyDesksView(generics.ListAPIView):
+    """
+    View which will show also desk with no reservations.
+    """
     queryset = Desk.objects.all().distinct() # distinct usuwa powielenia
     serializer_class = FilterSerializerWithEpmtyDesks
     permission_classes = [permissions.IsAdminUser]
     filter_backends = [DjangoFilterBackend]
     filterset_class = FinalExactFilterWithEmptyDesks
 
+
 class DeskAvailabilityFilter(FilterSet):
+    """
+    Filter for DeskAvailabilityView.
+    """
     date = django_filters.DateFilter(
         method="filter_by_date",
         label="Availability date"
@@ -319,6 +350,7 @@ class DeskAvailabilityView(generics.ListAPIView):
     """
     Returns list of available desks for given date.
     Date needs to be provided in order to receive list of empty desks.
+    Floor and Desk number filters can be left blank.
     Only EPTY desks will be shown for given date.
     """
     queryset = Desk.objects.all()

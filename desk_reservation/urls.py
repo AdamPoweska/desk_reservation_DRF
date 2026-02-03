@@ -17,7 +17,7 @@ router.register(f'workers', views.WorkerViewSet, basename='workers')
 router.register(f'reservations', views.ReservationViewSet, basename='reservations')
 router.register(f'fullreservationdataforhumans', views.FullReservationDataForHumansViewSet, basename='fullreservationdataforhumans')
 router.register(f'fullreservationdataformachines', views.FullReservationDataForMachinesViewSet, basename='fullreservationdataformachines')
-router.register(f'smallreservationviewset', views.SmallReservationViewSet, basename='smallreservationviewset')
+# router.register(f'smallreservationviewset', views.SmallReservationViewSet, basename='smallreservationviewset')
 router.register(f'fullreservationviewset', views.FullReservationViewSet, basename='fullreservationviewset')
 
 # router.register(f'fullreservationdataforfilters', views.FullReservationDataForFilterSerializer, basename='fullreservationdataforfilters')

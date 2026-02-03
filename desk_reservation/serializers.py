@@ -211,11 +211,8 @@ class FullReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reservation
         fields = [
-            # 'id',
-            # 'floor',
             'floor_number',
             'floor_display',
-            # 'desk',
             'desk_number',
             'desk_display',
             'reservation_date',
@@ -267,7 +264,7 @@ class FullReservationSerializer(serializers.ModelSerializer):
 
         reservation = Reservation.objects.create(
             desk=desk,
-            # floor=floor, # floor is under desk
+            # floor=floor, # desk->floor ForeignKey relation, floor is not needed here, JSON would be: { "floor_display": reservation.desk.floor.floor_number, "desk_display": reservation.desk.desk_number, "reservation_date": "...", "reservation_by": "..." }
             reservation_date=validated_data['reservation_date'],
             reservation_by=self.context['request'].user
         )
@@ -276,6 +273,9 @@ class FullReservationSerializer(serializers.ModelSerializer):
         
 
 class SmallReservationSerializer(serializers.ModelSerializer):
+    """
+    Serializer to Reservation model with reservation_by field presented as string (StringRelatedField).
+    """
     reservation_by = serializers.StringRelatedField(read_only=True) #StringRelatedField = if there is related object (ForeignKey), then show it as string
 
     class Meta:
@@ -284,6 +284,9 @@ class SmallReservationSerializer(serializers.ModelSerializer):
 
 
 class NestedDeskReservationSerializer(serializers.ModelSerializer):
+    """
+    1st level of nested serializer: Reservation and Desk models.
+    """
     reservations = SmallReservationSerializer(many=True, read_only=True)
  
     class Meta:
@@ -292,6 +295,10 @@ class NestedDeskReservationSerializer(serializers.ModelSerializer):
 
 
 class FullReservationDataForHumansSerializer(serializers.ModelSerializer):
+    """
+    2nd level of nested serializer: Reservation, Desk and Floor models.
+    It is trimmed for human eye.
+    """
     desks_on_floor = NestedDeskReservationSerializer(many=True, read_only=True)
 
     class Meta:
@@ -300,6 +307,10 @@ class FullReservationDataForHumansSerializer(serializers.ModelSerializer):
 
 
 class NestedDeskReservationForMachinesSerializer(serializers.ModelSerializer):
+    """
+    1st level of nested serializer: Reservation and Desk models.
+    Needed for FullReservationDataForMachinesSerializer.
+    """
     reservations = ReservationSerializer(many=True, read_only=True)
  
     class Meta:
@@ -308,6 +319,10 @@ class NestedDeskReservationForMachinesSerializer(serializers.ModelSerializer):
 
 
 class FullReservationDataForMachinesSerializer(serializers.ModelSerializer):
+    """
+    2nd level of nested serializer: Reservation, Desk and Floor models.
+    It shows full data.
+    """
     desks_on_floor = NestedDeskReservationForMachinesSerializer(many=True, read_only=True)
 
     class Meta:
@@ -316,18 +331,33 @@ class FullReservationDataForMachinesSerializer(serializers.ModelSerializer):
 
 
 class MinimalDeskSerializer(serializers.ModelSerializer):
+    """
+    Serializer with only desk_number field from Desk model - for filters.
+    """
     class Meta:
         model = Desk
         fields = ['desk_number']
 
 
 class MinimalFloorSerializer(serializers.ModelSerializer):
+    """
+    Serializer with only floor_number field from Floor model - for filters.
+    """
     class Meta:
         model = Floor
         fields = ['floor_number']
 
 
 class FullReservationDataForFilterSerializer(serializers.ModelSerializer):
+    """
+    Serializer with ORM to show data in concise way:
+    {
+        "floor_number": ...,
+        "desk_number": ...,
+        "reservation_date": ...,
+        "reservation_by": ...
+    },
+    """
     floor_number = serializers.IntegerField(source='desk.floor.floor_number')
     desk_number = serializers.IntegerField(source='desk.desk_number')
     reservation_by = serializers.StringRelatedField()
@@ -338,6 +368,9 @@ class FullReservationDataForFilterSerializer(serializers.ModelSerializer):
 
 
 class FullReservationSerializerForExactFilter(serializers.ModelSerializer):
+    """
+    Serializer build for next, nested serializer: FilterSerializerWithEpmtyDesks
+    """
     reservation_by = serializers.StringRelatedField()
 
     class Meta:
@@ -345,7 +378,11 @@ class FullReservationSerializerForExactFilter(serializers.ModelSerializer):
         fields = ['reservation_date', 'reservation_by']
 
 
-class FilterSerializerWithEpmtyDesks(serializers.ModelSerializer):
+class FilterSerializerWithEpmtyDesks(serializers.
+ModelSerializer):
+    """
+    Serializer which will show also desk with no reservations.
+    """
     reservations = FullReservationSerializerForExactFilter(many=True)
 
     class Meta:
@@ -354,6 +391,9 @@ class FilterSerializerWithEpmtyDesks(serializers.ModelSerializer):
   
     
 class DeskAvailabilitySerializer(serializers.ModelSerializer):
+    """
+    Serializer for DeskAvailabilityView - which will show available desks for given date.
+    """
     class Meta:
         model = Desk
         fields = ["floor", "desk_number"]
