@@ -53,6 +53,13 @@ SPECTACULAR_SETTINGS = {
     "TITLE": "Desk Reservation API",
     "DESCRIPTION": "API for desk reservation.",
     "VERSION": "1.0.0",
+    'TAGS': [
+        {"name": "Floors", "description": "Floor related operations"},
+        {"name": "Desks", "description": "Desks related operations"},
+        {"name": "Reservations", "description": "Reservations logic"},
+        {"name": "Filter", "description": "Filter logic"},
+        {"name": "Users", "description": "User logic"},
+    ]
 }
 
 MIDDLEWARE = [

@@ -6,6 +6,8 @@ from desk_reservation.serializers import *
 from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend, FilterSet
 import django_filters
+from drf_spectacular.utils import extend_schema
+
 
 class IsReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
@@ -15,6 +17,7 @@ class IsReadOnly(permissions.BasePermission):
             return True
 
 
+@extend_schema(tags=["Floors"])
 class FloorViewSet(viewsets.ModelViewSet):
     """
     CRUD actions - Floors.
@@ -28,6 +31,7 @@ class FloorViewSet(viewsets.ModelViewSet):
     permission_classes = [IsReadOnly]
 
 
+@extend_schema(tags=["Desks"])
 class DeskViewSet(viewsets.ModelViewSet):
     """
     CRUD actions - Desks on related Floors.
@@ -80,6 +84,7 @@ class DeskViewSet(viewsets.ModelViewSet):
         )
 
 
+@extend_schema(tags=["Desks"])
 class FloorDeskNestedViewSetOne(viewsets.ModelViewSet):
     """
     This View set uses smaller serializer with only needed fields from Desk model: 'id', 'desk_number'. Fields can be easily changed in SmallDeskSerializer.
@@ -93,6 +98,8 @@ class FloorDeskNestedViewSetOne(viewsets.ModelViewSet):
     # def get_queryset(self):
     #     return Floor.objects.filter(floor_num=self.kwargs['desk'])
 
+
+@extend_schema(tags=["Desks"])
 class FloorDeskNestedViewSetTwo(viewsets.ModelViewSet):
     """
     This is usual nested serializer on reversed relation using full model data from related model.
@@ -104,6 +111,7 @@ class FloorDeskNestedViewSetTwo(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 
+@extend_schema(tags=["Desks"])
 class FloorDeskNestedViewSetThree(viewsets.ModelViewSet):
     """
     This nested serializer uses 'PrimaryKeyRelatedField' on reversed relation. Only PK are shown.
@@ -115,6 +123,7 @@ class FloorDeskNestedViewSetThree(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 
+@extend_schema(tags=["Desks"])
 class FloorDeskNestedViewSetFour(viewsets.ModelViewSet):
     """
     This nested serializer is done by using 'SerializerMethodField'. We override 'get_' function to pass only desks numbers into variable.
@@ -126,6 +135,7 @@ class FloorDeskNestedViewSetFour(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 
+@extend_schema(tags=["Desks"])
 class FloorDeskNestedViewSetFive(viewsets.ModelViewSet):
     """
     This nested serializer is done by using 'StringRelatedField'.
@@ -137,6 +147,7 @@ class FloorDeskNestedViewSetFive(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 
+@extend_schema(tags=["Desks"])
 class FloorDeskNestedViewSetSix(viewsets.ModelViewSet):
     """
     This nested serializer is done by using 'SlugRelatedField'.
@@ -147,7 +158,7 @@ class FloorDeskNestedViewSetSix(viewsets.ModelViewSet):
     serializer_class = FloorDeskNestedSerializerSix
     permission_classes = [permissions.IsAuthenticated]
 
-        
+@extend_schema(tags=["User"])  
 class WorkerViewSet(viewsets.ModelViewSet):
     """
     CRUD actions - Workers.
@@ -157,6 +168,7 @@ class WorkerViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAdminUser]
 
 
+@extend_schema(tags=["Reservations"])
 class ReservationViewSet(viewsets.ModelViewSet):
     """
     Making reservations - CRUD. We use 'desk_ids' nested serializer which is write_only and 'desk' nested serializer which is read_only.
@@ -170,6 +182,7 @@ class ReservationViewSet(viewsets.ModelViewSet):
         serializer.save(reservation_by=self.request.user)
     
 
+@extend_schema(tags=["Reservations"])
 class FullReservationViewSet(viewsets.ModelViewSet):
     """
     Making reservations - CRUD. We use separate "desk_number" and "floor_number" fields for POST.
@@ -183,6 +196,7 @@ class FullReservationViewSet(viewsets.ModelViewSet):
         serializer.save(reservation_by=self.request.user)
 
 
+@extend_schema(tags=["Reservations"])
 class FullReservationDataForHumansViewSet(viewsets.ModelViewSet):
     """
     Reservation data - JSON trimmed for human eye.
@@ -192,6 +206,7 @@ class FullReservationDataForHumansViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAdminUser]
 
 
+@extend_schema(tags=["Reservations"])
 class FullReservationDataForMachinesViewSet(viewsets.ModelViewSet):
     """
     Reservation data - FULL JSON for machines.
@@ -201,6 +216,7 @@ class FullReservationDataForMachinesViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAdminUser]
 
 
+@extend_schema(tags=["Filter"])
 class FilterDataViewSet(generics.ListAPIView):
     # https://django-filter.readthedocs.io/en/stable/
     """
@@ -228,6 +244,7 @@ class FloorFilter(FilterSet):
         model = Desk
         fields = ['floor_number']
 
+@extend_schema(tags=["Filter"])
 class FloorFilterViewSet(generics.ListAPIView):
     """
     1st level filter allowing for filtering by floor number, showing floor and related desks.
@@ -277,6 +294,7 @@ class FinalExactFilter(FilterSet):
         fields = ['floor_number', 'desk_number', 'reservation_date', 'reservation_by'] #'floor_number',
 
 
+@extend_schema(tags=["Filter"])
 class FullReservationDataForFilterView(generics.ListAPIView):
     """
     View to show data in concise way:
@@ -316,6 +334,7 @@ class FinalExactFilterWithEmptyDesks(FilterSet):
         fields = ['floor', 'desk_number', 'reservation_date', 'reservation_by']
 
 
+@extend_schema(tags=["Filter"])
 class FullReservationDataForFilterWithEmptyDesksView(generics.ListAPIView):
     """
     View which will show also desk with no reservations.
@@ -345,7 +364,9 @@ class DeskAvailabilityFilter(FilterSet):
             reservations__reservation_date=value,
             reservations__reservation_by__isnull=False
         )
-    
+
+
+@extend_schema(tags=["Filter"])
 class DeskAvailabilityView(generics.ListAPIView):
     """
     Returns list of available desks for given date.
