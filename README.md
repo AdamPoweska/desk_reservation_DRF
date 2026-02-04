@@ -1,6 +1,7 @@
 DRF project simulating desk reservation system in a company. 
-Floors: 1-10. 
-Desks: 1-100 (on each floor). 
-Users: restricted (can book only allowed desks: floors, or desks numbers) and unrestricted (can book all desks).
+Admin can create Users
+Admin can create Floor numbers
+Admin can create Desk numbers (Desk - ForeignKey with Floor)
+User can create a Reservation of a desk for a given date (Reservation - ForeignKey with Desk)
 
 After running project, API documentation is available at /api/docs/ (drf_spectacular).

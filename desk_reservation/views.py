@@ -11,10 +11,13 @@ from drf_spectacular.utils import extend_schema
 
 class IsReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
+        if request.user and request.user.is_superuser:
+            return True
+        
         if request.user.is_authenticated and request.method in permissions.SAFE_METHODS: # GET, HEAD, OPTIONS
             return True
-        elif request.user and request.user.is_superuser:
-            return True
+        
+        return False
 
 
 @extend_schema(tags=["Floors"])
@@ -93,7 +96,7 @@ class FloorDeskNestedViewSetOne(viewsets.ModelViewSet):
     # queryset = Desk.objects.all()
     # queryset = Floor.objects.prefetch_related('desk_set') # lepsza optymalizacja niż linia wyżej ale linia wyżej też bedzie w 100% działać
     serializer_class = FloorDeskNestedSerializerOne
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsReadOnly]
 
     # def get_queryset(self):
     #     return Floor.objects.filter(floor_num=self.kwargs['desk'])
@@ -108,7 +111,7 @@ class FloorDeskNestedViewSetTwo(viewsets.ModelViewSet):
     # queryset = Desk.objects.all()
     # queryset = Floor.objects.prefetch_related('desk_set') # lepsza optymalizacja niż linia wyżej ale linia wyżej też bedzie w 100% działać
     serializer_class = FloorDeskNestedSerializerTwo
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsReadOnly]
 
 
 @extend_schema(tags=["Desks"])
@@ -120,7 +123,7 @@ class FloorDeskNestedViewSetThree(viewsets.ModelViewSet):
     # queryset = Desk.objects.all()
     # queryset = Floor.objects.prefetch_related('desk_set') # lepsza optymalizacja niż linia wyżej ale linia wyżej też bedzie w 100% działać
     serializer_class = FloorDeskNestedSerializerThree
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsReadOnly]
 
 
 @extend_schema(tags=["Desks"])
@@ -132,7 +135,7 @@ class FloorDeskNestedViewSetFour(viewsets.ModelViewSet):
     # queryset = Desk.objects.all()
     # queryset = Floor.objects.prefetch_related('desk_set') # lepsza optymalizacja niż linia wyżej ale linia wyżej też bedzie w 100% działać
     serializer_class = FloorDeskNestedSerializerFour
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsReadOnly]
 
 
 @extend_schema(tags=["Desks"])
@@ -144,7 +147,7 @@ class FloorDeskNestedViewSetFive(viewsets.ModelViewSet):
     # queryset = Desk.objects.all()
     # queryset = Floor.objects.prefetch_related('desk_set') # lepsza optymalizacja niż linia wyżej ale linia wyżej też bedzie w 100% działać
     serializer_class = FloorDeskNestedSerializerFive
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsReadOnly]
 
 
 @extend_schema(tags=["Desks"])
@@ -156,7 +159,7 @@ class FloorDeskNestedViewSetSix(viewsets.ModelViewSet):
     # queryset = Desk.objects.all()
     # queryset = Floor.objects.prefetch_related('desk_set') # lepsza optymalizacja niż linia wyżej ale linia wyżej też bedzie w 100% działać
     serializer_class = FloorDeskNestedSerializerSix
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsReadOnly]
 
 @extend_schema(tags=["User"])  
 class WorkerViewSet(viewsets.ModelViewSet):
@@ -176,7 +179,7 @@ class ReservationViewSet(viewsets.ModelViewSet):
     """
     queryset = Reservation.objects.all()
     serializer_class = ReservationSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
         serializer.save(reservation_by=self.request.user)
@@ -190,7 +193,7 @@ class FullReservationViewSet(viewsets.ModelViewSet):
     """
     queryset = Reservation.objects.all()
     serializer_class = FullReservationSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
         serializer.save(reservation_by=self.request.user)
@@ -203,7 +206,7 @@ class FullReservationDataForHumansViewSet(viewsets.ModelViewSet):
     """
     queryset = Floor.objects.all()
     serializer_class = FullReservationDataForHumansSerializer
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [IsReadOnly]
 
 
 @extend_schema(tags=["Reservations"])
@@ -213,7 +216,7 @@ class FullReservationDataForMachinesViewSet(viewsets.ModelViewSet):
     """
     queryset = Floor.objects.all()
     serializer_class = FullReservationDataForMachinesSerializer
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [IsReadOnly]
 
 
 @extend_schema(tags=["Filter"])
@@ -230,6 +233,7 @@ class FilterDataViewSet(generics.ListAPIView):
         'reservation_date': ['exact'],
         'reservation_by': ['exact'],
     }
+    permission_classes = [IsReadOnly]
 
 
 class FloorFilter(FilterSet):
@@ -253,6 +257,7 @@ class FloorFilterViewSet(generics.ListAPIView):
     serializer_class = DeskSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = FloorFilter
+    permission_classes = [IsReadOnly]
 
 
 class ExactFilter(FilterSet):
@@ -307,7 +312,7 @@ class FullReservationDataForFilterView(generics.ListAPIView):
     """
     queryset = Reservation.objects.all()
     serializer_class = FullReservationDataForFilterSerializer
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [IsReadOnly]
     filter_backends = [DjangoFilterBackend]
     filterset_class = FinalExactFilter
 
@@ -344,6 +349,7 @@ class FullReservationDataForFilterWithEmptyDesksView(generics.ListAPIView):
     permission_classes = [permissions.IsAdminUser]
     filter_backends = [DjangoFilterBackend]
     filterset_class = FinalExactFilterWithEmptyDesks
+    permission_classes = [IsReadOnly]
 
 
 class DeskAvailabilityFilter(FilterSet):
@@ -378,5 +384,5 @@ class DeskAvailabilityView(generics.ListAPIView):
     serializer_class = DeskAvailabilitySerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = DeskAvailabilityFilter
-
+    permission_classes = [IsReadOnly]
 
