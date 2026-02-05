@@ -40,7 +40,6 @@ class DeskViewSet(viewsets.ModelViewSet):
     CRUD actions - Desks on related Floors.
     """
     serializer_class = DeskSerializer
-    # https://stackoverflow.com/questions/49134679/drf-check-if-an-object-already-exist-in-db-when-receiving-a-request
     queryset = Desk.objects.all().order_by('floor', 'desk_number')
     # queryset = Desk.objects.filter(floor__floor_number=1)
     permission_classes = [IsReadOnly]
@@ -73,10 +72,8 @@ class DeskViewSet(viewsets.ModelViewSet):
 
         # Zgodność z REST — po POST powinieneś zwrócić 201 Created i w nagłówku 
         # Location podać adres nowo utworzonego zasobu.
-
         # Klient API (np. frontend, Postman, inny mikroserwis) może dzięki temu od razu przejść do tego zasobu, 
         # bez szukania jego id.
-        
         # Nagłówek wyświetli się tylko jeżeli mamy HyperlinkedModelSerializer albo dodamy nagłówek 'url' ręcznie.
 
         headhers = self.get_success_headers(serializer.data)

@@ -1,7 +1,19 @@
 DRF project simulating desk reservation system in a company. 
-Admin can create Users
-Admin can create Floor numbers
-Admin can create Desk numbers (Desk - ForeignKey with Floor)
-User can create a Reservation of a desk for a given date (Reservation - ForeignKey with Desk)
+
+Admin can:
+-create Users 
+-create Floor numbers 
+-create Desk numbers
+-create Reservation of a desk for a given date
+-use filters by or combined:
+    - floor
+    - desk
+    - reservation date
+    - reservation done by specyfic user
+    - search for empty desks
+
+User can create: 
+-Reservation of a desk for a given date
+-use filters same as admin 
 
 After running project, API documentation is available at /api/docs/ (drf_spectacular).
