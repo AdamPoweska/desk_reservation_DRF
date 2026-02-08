@@ -17,3 +17,11 @@ User can create:
 -use filters same as admin 
 
 After running project, API documentation is available at /api/docs/ (drf_spectacular).
+
+Admin:
+login: admin
+pw: 1234
+
+User:
+login: aaa
+pw: pXN8VgE4Mt

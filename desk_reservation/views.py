@@ -27,9 +27,9 @@ class FloorViewSet(viewsets.ModelViewSet):
     """
     # queryset = Floor.objects.filter(floor_number__endswith=0) | Floor.objects.filter(floor_number__startswith=2) # | == OR
     # queryset = Floor.objects.filter(~Q(floor_number=1) & ~Q(floor_number__startswith=2) & ~Q(floor_number__startswith=3)) # ~ == NOT, & == AND (in Q we use "&" as AND, the usuall comma "," will act simillary to & but it will not allow to group: "filter(Q(A) | Q(B), Q(C))" is not equal to "filter(Q(A) | (Q(B) & Q(C)))")
-    queryset = Floor.objects.all().order_by('floor_number')
     # print(queryset)
     # print(queryset.query)
+    queryset = Floor.objects.all().order_by('floor_number')
     serializer_class = FloorSerializer
     permission_classes = [IsReadOnly]
 
@@ -54,12 +54,7 @@ class DeskViewSet(viewsets.ModelViewSet):
         if desk_number is None or str(desk_number).strip() == "":
             return Response({'message': 'Desk can not be empty'}, status=status.HTTP_400_BAD_REQUEST)
 
-        
-        # get_or_create - Returns a tuple of (object, created), where object is the retrieved or created object 
-        # and created is a boolean specifying whether a new object was created.
-        # If an object is found, get_or_create() returns a tuple of that object and False. created = False, defaults= is ignored
-        # If an object is not found, get_or_create() creates a new object. defaults= <- additional fields for creating object
-        
+        # get_or_create - Returns a tuple of (object, created), where object is the retrieved or created object and created is a boolean specifying whether a new object was created. If an object is found, get_or_create() returns a tuple of that object and False. created = False, defaults= is ignored. If an object is not found, get_or_create() creates a new object. defaults= <- additional fields for creating object.
         desk, created = Desk.objects.get_or_create(
             floor=floor,
             desk_number=desk_number,
@@ -70,12 +65,7 @@ class DeskViewSet(viewsets.ModelViewSet):
             return Response({'message': 'Desk number already exists on given floor'}, status=status.HTTP_400_BAD_REQUEST)
         
 
-        # Zgodność z REST — po POST powinieneś zwrócić 201 Created i w nagłówku 
-        # Location podać adres nowo utworzonego zasobu.
-        # Klient API (np. frontend, Postman, inny mikroserwis) może dzięki temu od razu przejść do tego zasobu, 
-        # bez szukania jego id.
-        # Nagłówek wyświetli się tylko jeżeli mamy HyperlinkedModelSerializer albo dodamy nagłówek 'url' ręcznie.
-
+        # Zgodność z REST — po POST powinieneś zwrócić 201 Created i w nagłówku Location podać adres nowo utworzonego zasobu. Klient API (np. frontend, Postman, inny mikroserwis) może dzięki temu od razu przejść do tego zasobu, bez szukania jego id. Nagłówek wyświetli się tylko jeżeli mamy HyperlinkedModelSerializer albo dodamy nagłówek 'url' ręcznie.
         headhers = self.get_success_headers(serializer.data)
         return Response(
             DeskSerializer(desk).data,
@@ -105,8 +95,6 @@ class FloorDeskNestedViewSetTwo(viewsets.ModelViewSet):
     This is usual nested serializer on reversed relation using full model data from related model.
     """
     queryset = Floor.objects.all()
-    # queryset = Desk.objects.all()
-    # queryset = Floor.objects.prefetch_related('desk_set') # lepsza optymalizacja niż linia wyżej ale linia wyżej też bedzie w 100% działać
     serializer_class = FloorDeskNestedSerializerTwo
     permission_classes = [IsReadOnly]
 
@@ -117,8 +105,6 @@ class FloorDeskNestedViewSetThree(viewsets.ModelViewSet):
     This nested serializer uses 'PrimaryKeyRelatedField' on reversed relation. Only PK are shown.
     """
     queryset = Floor.objects.all()
-    # queryset = Desk.objects.all()
-    # queryset = Floor.objects.prefetch_related('desk_set') # lepsza optymalizacja niż linia wyżej ale linia wyżej też bedzie w 100% działać
     serializer_class = FloorDeskNestedSerializerThree
     permission_classes = [IsReadOnly]
 
@@ -129,8 +115,6 @@ class FloorDeskNestedViewSetFour(viewsets.ModelViewSet):
     This nested serializer is done by using 'SerializerMethodField'. We override 'get_' function to pass only desks numbers into variable.
     """
     queryset = Floor.objects.all()
-    # queryset = Desk.objects.all()
-    # queryset = Floor.objects.prefetch_related('desk_set') # lepsza optymalizacja niż linia wyżej ale linia wyżej też bedzie w 100% działać
     serializer_class = FloorDeskNestedSerializerFour
     permission_classes = [IsReadOnly]
 
@@ -141,8 +125,6 @@ class FloorDeskNestedViewSetFive(viewsets.ModelViewSet):
     This nested serializer is done by using 'StringRelatedField'.
     """
     queryset = Floor.objects.all()
-    # queryset = Desk.objects.all()
-    # queryset = Floor.objects.prefetch_related('desk_set') # lepsza optymalizacja niż linia wyżej ale linia wyżej też bedzie w 100% działać
     serializer_class = FloorDeskNestedSerializerFive
     permission_classes = [IsReadOnly]
 
@@ -153,8 +135,6 @@ class FloorDeskNestedViewSetSix(viewsets.ModelViewSet):
     This nested serializer is done by using 'SlugRelatedField'.
     """
     queryset = Floor.objects.all()
-    # queryset = Desk.objects.all()
-    # queryset = Floor.objects.prefetch_related('desk_set') # lepsza optymalizacja niż linia wyżej ale linia wyżej też bedzie w 100% działać
     serializer_class = FloorDeskNestedSerializerSix
     permission_classes = [IsReadOnly]
 
@@ -218,7 +198,6 @@ class FullReservationDataForMachinesViewSet(viewsets.ModelViewSet):
 
 @extend_schema(tags=["Filter"])
 class FilterDataViewSet(generics.ListAPIView):
-    # https://django-filter.readthedocs.io/en/stable/
     """
     Basic view with django_filters. 
     """
@@ -273,13 +252,6 @@ class ExactFilter(FilterSet):
         fields = ['floor_number', 'desk_number']
 
 
-# class ExactFilterViewSet(generics.ListAPIView):
-#     queryset = Desk.objects.all()
-#     serializer_class = DeskSerializer
-#     filter_backends = [DjangoFilterBackend]
-#     filterset_class = ExactFilter
-
-
 class FinalExactFilter(FilterSet):
     """
     Filter for FullReservationDataForFilterView.
@@ -314,12 +286,6 @@ class FullReservationDataForFilterView(generics.ListAPIView):
     filterset_class = FinalExactFilter
 
 
-# class SmallReservationViewSet(viewsets.ModelViewSet):
-#     queryset = Reservation.objects.all()
-#     serializer_class = FullReservationDataForFilterSerializer
-#     permission_classes = [permissions.IsAdminUser]
-
-
 class FinalExactFilterWithEmptyDesks(FilterSet):
     """
     Filter for FullReservationDataForFilterWithEmptyDesksView .
@@ -341,7 +307,7 @@ class FullReservationDataForFilterWithEmptyDesksView(generics.ListAPIView):
     """
     View which will show also desk with no reservations.
     """
-    queryset = Desk.objects.all().distinct() # distinct usuwa powielenia
+    queryset = Desk.objects.all().distinct() # .distinct() - usuwa powielenia
     serializer_class = FilterSerializerWithEpmtyDesks
     permission_classes = [permissions.IsAdminUser]
     filter_backends = [DjangoFilterBackend]

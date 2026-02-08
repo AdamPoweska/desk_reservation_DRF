@@ -96,7 +96,6 @@ class FloorDeskNestedSerializerFour(serializers.ModelSerializer):
         fields = ['id', 'floor_number', 'desk']
 
     def get_desk(self, obj):
-        # Filter only desks numbers: https://www.geeksforgeeks.org/python/how-to-filter-a-nested-serializer-in-django-rest-framework/
         return [
             {
                 'desk': c.desk_number
@@ -168,8 +167,6 @@ class ReservationSerializer(serializers.ModelSerializer):
     Serializer for Reservation model, UniqueTogetherValidator applied, "desk_ids" field is write_only, "reservation_by" is read_only.
     "desk_ids" show __str__ of Desk model.
     """
-    #https://stackoverflow.com/questions/26561640/django-rest-framework-read-nested-data-write-integer
-    #https://dev.to/forhadakhan/automatically-add-logged-in-user-under-createdby-and-updatedby-to-model-in-django-rest-framework-4c9c
     desk = DeskSerializer(read_only=True)
     desk_ids = serializers.PrimaryKeyRelatedField(write_only=True, source='desk', queryset=Desk.objects.all())
     reservation_by = serializers.StringRelatedField(default=serializers.CurrentUserDefault(), read_only=True)

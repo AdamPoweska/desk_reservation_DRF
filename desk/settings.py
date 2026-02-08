@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'desk_reservation',
     'django_filters',
     'drf_spectacular',
+    'utils',
 ]
 
 REST_FRAMEWORK = {
