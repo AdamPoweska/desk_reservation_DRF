@@ -25,3 +25,5 @@ pw: 1234
 User:
 login: aaa
 pw: pXN8VgE4Mt
+
+Desks numbers were added by utils/.../generate_desks.py.
