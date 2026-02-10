@@ -2,8 +2,8 @@ from django.core.management.base import BaseCommand
 from desk_reservation.models import User
 from faker import Faker
 
-fake = Faker()
 
+fake = Faker()
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
@@ -20,13 +20,3 @@ class Command(BaseCommand):
             print("login: ", user.username, "PW: ", user_password)
 
         self.stdout.write(self.style.SUCCESS("Users generated"))
-
-
-        # for each_user in User.objects.all():
-        #     print(each_user)
-
-
-    # class Meta:
-    #     model = User
-    #     fields = ['id', 'username', 'first_name', 'last_name', 'email', 'password']
-# BEZ ID
