@@ -20,10 +20,12 @@ After running project, API documentation is available at /api/docs/ (drf_spectac
 
 Admin:
 login: admin
-pw: 1234
+pw: *6MHVo8w3ty7
 
-User:
-login: aaa
-pw: pXN8VgE4Mt
+Example user:
+login: stevenskim
+pw: uF6e&EqMi)
 
-Desks numbers were added by utils/.../generate_desks.py.
+Desks numbers were added by utils/.../generate_desks.py
+Users were added by utils/.../generate_users.py
+Reservations were added by utils/.../generate_reservations.py

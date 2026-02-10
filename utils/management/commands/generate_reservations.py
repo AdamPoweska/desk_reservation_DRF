@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from datetime import date
 import random
 
-User = get_user_model()
+User = get_user_model() # we need it for ACTUAL user model in this project
 
 def date_generator():
     year = random.randint(2024, 2026)
