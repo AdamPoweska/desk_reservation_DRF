@@ -1,4 +1,4 @@
-A backend web application developed using Django Rest Framework (DRF) to simulate a company desk reservation system. The application enables users to manage office floors, desks, and reservations through a fully RESTful API.
+Backend web application developed using Django Rest Framework (DRF) to simulate a company desk reservation system. The application enables users to manage office floors, desks, and reservations through a fully RESTful API.
 
 Key features include:
 - Multi-floor office structure with desk allocation capabilities.
